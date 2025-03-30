@@ -1,60 +1,95 @@
-CREATE TABLE "users" (
-  "id" int PRIMARY KEY,
-  "email" varchar(255) UNIQUE NOT NULL,
-  "password" varchar(255) NOT NULL,
-  "photo" varchar(255),
-  "purchased_products" int
+CREATE TABLE users (
+  id VARCHAR PRIMARY KEY,
+  name VARCHAR(255),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  phone VARCHAR(20),
+  address TEXT,
+  role VARCHAR(50) DEFAULT 'customer',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "sellers" (
-  "id" int PRIMARY KEY,
-  "email" varchar(255) UNIQUE NOT NULL,
-  "photo" varchar,
-  "password" varchar NOT NULL,
-  "sold_products" int,
-  "rating_products" float,
-  "time_sold" datetime
+CREATE TABLE sellers (
+  id VARCHAR PRIMARY KEY,
+  name VARCHAR(255),
+  email VARCHAR(255) UNIQUE NOT NULL,
+  password VARCHAR(255) NOT NULL,
+  phone VARCHAR(20),
+  store_name VARCHAR(255) NOT NULL,
+  rating FLOAT DEFAULT 0,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE "products" (
-  "code" int PRIMARY KEY,
-  "name_product" varchar(255) NOT NULL,
-  "description_product" varchar,
-  "price_product" float NOT NULL,
-  "discount_percentage" float,
-  "category" varchar(255) NOT NULL,
-  "tags" varchar(255),
-  "stock" int NOT NULL,
-  "reviews" int,
-  "is_id_seller" int,
-  "rating" float,
-  "img_product" varchar(255) NOT NULL,
-  "strars_products" float
+CREATE TABLE products (
+  id VARCHAR PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  description TEXT,
+  price DECIMAL(10,2) NOT NULL,
+  stock INT NOT NULL,
+  category VARCHAR(255) NOT NULL,
+  discount_percentage FLOAT DEFAULT 0,
+  rating FLOAT DEFAULT 0,
+  image_url VARCHAR(255) NOT NULL,
+  seller_id VARCHAR NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (seller_id) REFERENCES sellers(id) ON DELETE CASCADE
 );
 
-CREATE TABLE "comments" (
-  "id_comment" int PRIMARY KEY,
-  "user_comment" int NOT NULL,
-  "code_comment_product" int NOT NULL,
-  "comment_text" varchar(255) NOT NULL,
-  "likes" int,
-  "dislikes" int
+CREATE TABLE orders (
+  id VARCHAR PRIMARY KEY,
+  user_id VARCHAR NOT NULL,
+  total_price DECIMAL(10,2) NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE "message" (
-  "code" int PRIMARY KEY,
-  "body" varchar NOT NULL,
-  "resive_message_id" int UNIQUE NOT NULL,
-  "id_user_messages" int,
-  "id_sellers_messages" int
+CREATE TABLE order_items (
+  id VARCHAR PRIMARY KEY,
+  order_id VARCHAR NOT NULL,
+  product_id VARCHAR NOT NULL,
+  quantity INT NOT NULL,
+  subtotal DECIMAL(10,2) NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
-ALTER TABLE "products" ADD FOREIGN KEY ("is_id_seller") REFERENCES "sellers" ("id");
+CREATE TABLE reviews (
+  id VARCHAR PRIMARY KEY,
+  user_id VARCHAR NOT NULL,
+  product_id VARCHAR NOT NULL,
+  rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+  comment TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
 
-ALTER TABLE "comments" ADD FOREIGN KEY ("user_comment") REFERENCES "users" ("id");
+CREATE TABLE cart (
+  id VARCHAR PRIMARY KEY,
+  user_id VARCHAR NOT NULL,
+  product_id VARCHAR NOT NULL,
+  quantity INT NOT NULL CHECK (quantity > 0),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
 
-ALTER TABLE "comments" ADD FOREIGN KEY ("code_comment_product") REFERENCES "products" ("code");
+CREATE TABLE payments (
+  id VARCHAR PRIMARY KEY,
+  order_id VARCHAR NOT NULL,
+  payment_method VARCHAR(50) NOT NULL,
+  amount DECIMAL(10,2) NOT NULL,
+  status VARCHAR(50) NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+);
 
-ALTER TABLE "message" ADD FOREIGN KEY ("id_user_messages") REFERENCES "users" ("id");
-
-ALTER TABLE "message" ADD FOREIGN KEY ("id_sellers_messages") REFERENCES "sellers" ("id");
+CREATE TABLE messages (
+  id VARCHAR PRIMARY KEY,
+  sender_id VARCHAR NOT NULL,
+  receiver_id VARCHAR NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (receiver_id) REFERENCES sellers(id) ON DELETE CASCADE
+);
