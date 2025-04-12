@@ -36,30 +36,33 @@ export const getProduct = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
+  const { idSeller } = req.params;
+  
   const {
     id,
     name,
     description,
     price,
-    image,
+    image_url,
     stock,
     category,
     discountPorcentage = 0.0,
     rating,
   } = req.body;
   try {
-    const query = `INSERT INTO products (id, name, description, price, image_url, stock, category, discountPorcentage, rating) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`;
+    const query = `INSERT INTO products (id, name, description, price, image_url, stock, category, discount_percentage, rating, seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
 
     const { rows } = await pool.query(query, [
       id,
       name,
       description,
       price,
-      image,
+      image_url,
       stock,
       category,
       discountPorcentage,
       rating,
+      idSeller,
     ]);
 
     res.status(201).json({
@@ -77,7 +80,7 @@ export const updateProduct = async (req, res) => {
     name = '',
     description = '',
     price = 0,
-    image = '',
+    image_url = '',
     stock = 0,
     category = '',
     discountPorcentage = 0.0,
@@ -102,7 +105,7 @@ export const updateProduct = async (req, res) => {
       name,
       description,
       price,
-      image,
+      image_url,
       stock,
       category,
       discountPorcentage,
@@ -144,4 +147,41 @@ export const deleteProduct = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
+};
+
+export const createAllProducts = async (req, res) => {
+
+   const productsNews = req.body;
+  for (const {
+    id,
+    name,
+    description,
+    price,
+    image_url,
+    stock,
+    seller_id,
+    category,
+    discountPorcentage = 0.0,
+    rating,
+  } of productsNews) {
+      const query = `INSERT INTO products (id, name, description, price, image_url, stock, category, discount_percentage, rating, seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) `;
+
+      await pool.query(query, [
+        id,
+        name,
+        description,
+        price,
+        image_url,
+        stock,
+        category,
+        discountPorcentage,
+        rating,
+        seller_id,
+      ]);
+  }
+
+  res.status(201).json({
+    message: 'Products created',
+    data: productsNews,
+  });
 };

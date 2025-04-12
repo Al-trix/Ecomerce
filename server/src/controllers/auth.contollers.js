@@ -1,8 +1,9 @@
 import { pool } from '../db.js';
 import { hash, compare } from 'bcryptjs';
+import { createToken } from '../libs/createToken.js';
 
 export const register = async (req, res) => {
-  const { id, name, phone, address, email, password } = req.body;
+  const { id, name, phone, email, password, address } = req.body;
   const hashPassword = await hash(password, 10);
 
   try {
@@ -18,7 +19,7 @@ export const register = async (req, res) => {
     }
 
     const query =
-      'INSERT INTO users (id, email, password, address, phone, name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+      'INSERT INTO users (id, email, password, address, phone, name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING (id, email, name)';
 
     const { rows } = await pool.query(query, [
       id,
@@ -28,25 +29,27 @@ export const register = async (req, res) => {
       phone,
       name,
     ]);
-    console.log(rows);
+
+    createToken(rows[0], 'access_token', '1h');
 
     res.status(202).json({
       message: 'User created successfully',
       body: {
-        user: { rows },
+        data: rows[0],
+        role: 'user',
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err.response.data });
+    res.status(500).json({ error: err });
+    console.log(err);
   }
 };
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-
     const { rowCount, rows } = await pool.query(
-      'SELECT * FROM users WHERE email = $1 ',
+      'SELECT (id, email, name) FROM users WHERE email = $1 ',
       [email]
     );
 
@@ -64,6 +67,8 @@ export const login = async (req, res) => {
       });
     }
 
+    createToken(rows[0], 'access_token', '1h');
+
     res.status(200).json({
       message: 'Login successfully',
       body: {
@@ -71,7 +76,8 @@ export const login = async (req, res) => {
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err.response.data });
+    res.status(500).json({ error: err });
+    console.log(err);
   }
 };
 
@@ -92,7 +98,8 @@ export const deleteAcount = async (req, res) => {
       message: 'User deleted successfully',
     });
   } catch (err) {
-    res.status(500).json({ error: err.response.data });
+    res.status(500).json({ error: err });
+    console.log(err);
   }
 };
 
@@ -113,18 +120,55 @@ export const editAcount = async (req, res) => {
       email = COALESCE(NULLIF($2, ''), email), 
       phone = COALESCE(NULLIF($3, ''), phone),
       address = COALESCE(NULLIF($4, ''), address) 
-      WHERE id = $5 RETURNING *;
+      WHERE id = $5;
   `;
   try {
     const { rows } = await pool.query(query, [name, email, phone, address, id]);
 
     res.status(200).json({
       message: 'User updated successfully',
-      body: {
-        user: rows[0],
-      },
     });
   } catch (err) {
-    res.status(500).json({ error: err.response.data });
+    res.status(500).json({ error: err });
+    console.log(err);
   }
+};
+
+export const logOut = async (req, res) => {
+  try{
+    res.clearCookie('userToken');
+    res.status(200).json({
+      message: 'Logout succSessfully',
+    });
+  }catch(err){
+    res.status(500).json({ error: err });
+    console.log(err);
+  }
+}
+
+export const createAllUsers = async (req, res) => {
+  const usersNews = req.body;
+
+  for (const { id, name, phone, email, password, address } of usersNews) {
+    const query =
+      'INSERT INTO users (id, email, password, address, phone, name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
+
+    const { rows } = await pool.query(query, [
+      id,
+      email,
+      hashPassword,
+      address,
+      phone,
+      name,
+    ]);
+  }
+
+  const query = `SELECT * FROM users`;
+
+  res.status(200).json({
+    message: 'users created successfully',
+    body: {
+      users: query.rows,
+    },
+  });
 };
