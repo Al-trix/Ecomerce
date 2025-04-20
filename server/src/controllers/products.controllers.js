@@ -1,4 +1,5 @@
 import { pool } from '../db.js';
+import { generateUID } from '../libs/generateUID.js';
 
 export const getProducts = async (req, res) => {
   try {
@@ -39,7 +40,6 @@ export const createProduct = async (req, res) => {
   const { idSeller } = req.params;
   
   const {
-    id,
     name,
     description,
     price,
@@ -53,7 +53,7 @@ export const createProduct = async (req, res) => {
     const query = `INSERT INTO products (id, name, description, price, image_url, stock, category, discount_percentage, rating, seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING *`;
 
     const { rows } = await pool.query(query, [
-      id,
+      generateUID('product'),
       name,
       description,
       price,

@@ -1,16 +1,57 @@
-import { Router } from "express";
-import { createProduct, deleteProduct, getProduct, getProducts, updateProduct, createAllProducts } from "../controllers/products.controllers.js";
-import { checkAuthorizade } from "../middleware/validateTokens.midleware.js";
+import { Router } from 'express';
+import {
+  productUpdateSchema,
+  productCreateSchema,
+} from '../schemas/products.schema.js';
+import {
+  createProduct,
+  deleteProduct,
+  getProduct,
+  getProducts,
+  updateProduct,
+  createAllProducts,
+} from '../controllers/products.controllers.js';
+import { checkAuthorizade } from '../middleware/validateTokens.midleware.js';
+import { validateSchema } from '../middleware/validateSchemas.midleware.js';
 
+//? Instanciamos un router para manejar las rutas
 const productsRoutes = Router();
 
-const routeProducts = '/products';
+//? Definimos las rutas para los productos
+const routeProducts = '/product';
 
-productsRoutes.get(`${routeProducts}`, getProducts);
-productsRoutes.get(`${routeProducts}/:id`, getProduct);
-productsRoutes.post(`${routeProducts}/:idSeller`, checkAuthorizade ,createProduct);
-productsRoutes.delete(`${routeProducts}/:id`, checkAuthorizade ,deleteProduct);
-productsRoutes.put(`${routeProducts}/:id` , checkAuthorizade ,updateProduct);
+//! Rutas para los productos
+// * obtener todos los productos
+productsRoutes.get(`/products`, getProducts);
+
+// * obtener un producto por id
+productsRoutes.get(
+  `${routeProducts}/:id`,
+  getProduct
+);
+
+// * crear un producto
+productsRoutes.post(
+  `${routeProducts}/:idSeller`,
+  checkAuthorizade('seller'),
+  validateSchema(productCreateSchema),
+  createProduct
+);
+
+// * eliminar un producto
+productsRoutes.delete(
+  `${routeProducts}/:id`,
+  checkAuthorizade('seller'),
+  deleteProduct
+);
+
+// * editar un producto
+productsRoutes.put(
+  `${routeProducts}/:id`,
+  checkAuthorizade('seller'),
+  validateSchema(productUpdateSchema),
+  updateProduct
+);
 
 // temporal url para pruebas
 productsRoutes.post(`${routeProducts}All`, createAllProducts);

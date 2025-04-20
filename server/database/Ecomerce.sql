@@ -70,6 +70,7 @@ CREATE TABLE cart (
   user_id VARCHAR NOT NULL,
   product_id VARCHAR NOT NULL,
   quantity INT NOT NULL CHECK (quantity > 0),
+  status VARCHAR(50) NOT NULL DEFAULT 'active',
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
   FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );

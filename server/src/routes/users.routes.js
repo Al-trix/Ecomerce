@@ -6,16 +6,56 @@ import {
   deleteAcount,
   editAcount,
   createAllUsers,
-} from '../controllers/auth.contollers.js';
+  logOut,
+} from '../controllers/authUser.contollers.js';
+import {
+  userRegisterSchema,
+  loginSchema,
+  userUpdateSchema,
+} from '../schemas/auth.schema.js';
+import { validateSchema } from '../middleware/validateSchemas.midleware.js';
 
+//? Instanciamos un router para manejar las rutas
 const usersRoutes = Router();
-// * las rutas de los usuarios se manejaran en /auth
+
+//? Definimos las rutas para los usuarios
 const routeAuth = '/user';
 
-usersRoutes.post(`${routeAuth}/login`, login);
-usersRoutes.post(`${routeAuth}/register`, register);
-usersRoutes.delete(`${routeAuth}/:id`,checkAuthorizade, deleteAcount);
-usersRoutes.put(`${routeAuth}/:id`, checkAuthorizade ,editAcount);
+//! Rutas para los usuarios
+
+// *  Registrar un usuario
+usersRoutes.post(
+  `${routeAuth}/register`,
+  validateSchema(userRegisterSchema),
+  register
+);
+
+
+// * logear un usuario
+usersRoutes.post(`${routeAuth}/login`, validateSchema(loginSchema), login);
+
+
+// * eliminar datos de un usuario
+usersRoutes.delete(
+  `${routeAuth}/:id`,
+  checkAuthorizade('user'),
+  deleteAcount
+);
+
+
+// * editar datos de un usuario
+usersRoutes.put(
+  `${routeAuth}/:id`,
+  checkAuthorizade('user'),
+  validateSchema(userUpdateSchema),
+  editAcount
+);
+
+
+// * cerrar sesión de un usuario
+usersRoutes.post(`${routeAuth}/logout`, logOut);
+
+
 
 // temporal url para pruebas
 usersRoutes.post(`${routeAuth}/all`, createAllUsers);

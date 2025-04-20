@@ -1,9 +1,10 @@
 import { pool } from '../db.js';
 import { hash, compare } from 'bcryptjs';
 import { createToken } from '../libs/createToken.js';
+import { generateUID } from '../libs/generateUID.js';
 
 export const register = async (req, res) => {
-  const { id, name, phone, email, password, address } = req.body;
+  const { name, phone, email, password, address } = req.body;
   const hashPassword = await hash(password, 10);
 
   try {
@@ -19,10 +20,10 @@ export const register = async (req, res) => {
     }
 
     const query =
-      'INSERT INTO users (id, email, password, address, phone, name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING (id, email, name)';
+      'INSERT INTO users (id, email, password, address, phone, name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
 
     const { rows } = await pool.query(query, [
-      id,
+      generateUID(),
       email,
       hashPassword,
       address,
@@ -30,12 +31,21 @@ export const register = async (req, res) => {
       name,
     ]);
 
-    createToken(rows[0], 'access_token', '1h');
+    const registerUser = {
+      id: rows[0]?.id,
+      email: rows[0]?.email,
+      name: rows[0]?.name,
+      phone: rows[0]?.phone,
+      address: rows[0]?.address,
+      dateTime: rows[0]?.created_at,
+    };
+
+    createToken(registerUser, '', 'access_token', res);
 
     res.status(202).json({
       message: 'User created successfully',
       body: {
-        data: rows[0],
+        data: registerUser,
         role: 'user',
       },
     });
@@ -47,9 +57,12 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
+
+  console.log(email, password);
+
   try {
     const { rowCount, rows } = await pool.query(
-      'SELECT (id, email, name) FROM users WHERE email = $1 ',
+      'SELECT * FROM users WHERE email = $1 ',
       [email]
     );
 
@@ -67,12 +80,22 @@ export const login = async (req, res) => {
       });
     }
 
-    createToken(rows[0], 'access_token', '1h');
+    const loginUser = {
+      id: rows[0]?.id,
+      email: rows[0]?.email,
+      name: rows[0]?.name,
+      phone: rows[0]?.phone,
+      address: rows[0]?.address,
+      dateTime: rows[0]?.created_at,
+    };
 
-    res.status(200).json({
+    createToken(loginUser, 'user', 'access_token', res);
+
+    res.status(202).json({
       message: 'Login successfully',
       body: {
-        user: rows[0],
+        data: loginUser,
+        role: 'user',
       },
     });
   } catch (err) {
@@ -105,25 +128,31 @@ export const deleteAcount = async (req, res) => {
 
 export const editAcount = async (req, res) => {
   const { id } = req.params;
-  const {
-    name = '',
-    phone = '',
-    address = '',
-    email = '',
-    password = '',
-  } = req.body;
+  const { name = '', phone = '', address = '', email = '' } = req.body;
 
-  const query = `
-    UPDATE users 
-    SET 
-      name = COALESCE(NULLIF($1, ''), name), 
-      email = COALESCE(NULLIF($2, ''), email), 
-      phone = COALESCE(NULLIF($3, ''), phone),
-      address = COALESCE(NULLIF($4, ''), address) 
-      WHERE id = $5;
-  `;
   try {
-    const { rows } = await pool.query(query, [name, email, phone, address, id]);
+    const query = `
+      UPDATE users 
+      SET 
+        name = COALESCE(NULLIF($1, ''), name), 
+        email = COALESCE(NULLIF($2, ''), email), 
+        phone = COALESCE(NULLIF($3, ''), phone),
+        address = COALESCE(NULLIF($4, ''), address) 
+        WHERE id = $5;
+    `;
+    const { rowCount } = await pool.query(query, [
+      name,
+      email,
+      phone,
+      address,
+      id,
+    ]);
+
+    if (rowCount === 0) {
+      return res.status(404).json({
+        message: 'User not found',
+      });
+    }
 
     res.status(200).json({
       message: 'User updated successfully',
@@ -135,26 +164,28 @@ export const editAcount = async (req, res) => {
 };
 
 export const logOut = async (req, res) => {
-  try{
-    res.clearCookie('userToken');
+  try {
+    res.clearCookie('access_token');
     res.status(200).json({
       message: 'Logout succSessfully',
     });
-  }catch(err){
+  } catch (err) {
     res.status(500).json({ error: err });
     console.log(err);
   }
-}
+};
 
 export const createAllUsers = async (req, res) => {
   const usersNews = req.body;
 
-  for (const { id, name, phone, email, password, address } of usersNews) {
+  for (const { name, phone, email, password, address } of usersNews) {
     const query =
       'INSERT INTO users (id, email, password, address, phone, name) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
 
+    const hashPassword = await hash(password, 10);
+
     const { rows } = await pool.query(query, [
-      id,
+      generateUID(),
       email,
       hashPassword,
       address,

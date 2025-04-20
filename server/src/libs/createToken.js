@@ -1,16 +1,18 @@
 import jwt from 'jsonwebtoken';
 import { TOKEN_SECRET } from '../config.js';
 
-export const createToken = (payload, role = "user", nameCookie, expiresIn = '1h') => {
+export const createToken = (payload, role , nameCookie, res) => {  
+  
   try {
     const payloadToken = jwt.sign(payload, TOKEN_SECRET, {
-      expiresIn,
+      expiresIn : '1h'
     });
 
     const payloadInfo = {
       data: payloadToken,
       role
     }
+
     res.cookie(nameCookie, payloadInfo, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
