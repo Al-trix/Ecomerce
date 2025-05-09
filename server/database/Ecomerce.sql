@@ -5,9 +5,14 @@ CREATE TABLE users (
   password VARCHAR(255) NOT NULL,
   phone VARCHAR(20),
   address TEXT,
+  avatar VARCHAR(255),
+  city VARCHAR(255),
   role VARCHAR(50) DEFAULT 'customer',
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+--seller: 30c47d70
+--user: 0ff27429
 
 CREATE TABLE sellers (
   id VARCHAR PRIMARY KEY,
@@ -15,6 +20,8 @@ CREATE TABLE sellers (
   email VARCHAR(255) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
   phone VARCHAR(50),
+  avatar VARCHAR(255),
+  city VARCHAR(255),
   store_name VARCHAR(255) NOT NULL,
   rating FLOAT DEFAULT 0,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -44,7 +51,7 @@ CREATE TABLE orders (
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-CREATE TABLE order_items (
+CREATE TABLE orders_items (
   id VARCHAR PRIMARY KEY,
   order_id VARCHAR NOT NULL,
   product_id VARCHAR NOT NULL,
@@ -87,10 +94,28 @@ CREATE TABLE payments (
 
 CREATE TABLE messages (
   id VARCHAR PRIMARY KEY,
-  sender_id VARCHAR NOT NULL,
-  receiver_id VARCHAR NOT NULL,
+  sender_user_id VARCHAR,
+  receiver_user_id VARCHAR,
+  sender_seller_id VARCHAR,
+  receiver_seller_id VARCHAR,
   message TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (sender_id) REFERENCES users(id) ON DELETE CASCADE,
-  FOREIGN KEY (receiver_id) REFERENCES sellers(id) ON DELETE CASCADE
+
+  FOREIGN KEY (sender_user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (sender_seller_id) REFERENCES sellers(id) ON DELETE CASCADE,
+  FOREIGN KEY (receiver_user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (receiver_seller_id) REFERENCES sellers(id) ON DELETE CASCADE,
+
+  CHECK (
+    -- Solo uno debe ser sender (user o seller)
+    (sender_user_id IS NOT NULL AND sender_seller_id IS NULL) OR
+    (sender_user_id IS NULL AND sender_seller_id IS NOT NULL)
+  ),
+  
+  CHECK (
+    -- Solo uno debe ser receiver (user o seller)
+    (receiver_user_id IS NOT NULL AND receiver_seller_id IS NULL) OR
+    (receiver_user_id IS NULL AND receiver_seller_id IS NOT NULL)
+  )
 );
+

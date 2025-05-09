@@ -4,16 +4,15 @@ import {
   loginSeller,
   updatedSeller,
   deleteSeller,
-  createAllSellers,
   logOut,
-} from '../controllers/authSeller.controllers.js';
-import { checkAuthorizade } from '../middleware/validateTokens.midleware.js';
-import { validateSchema } from '../middleware/validateSchemas.midleware.js';
+} from '../../controllers/api/authSeller.controllers.js';
+import { checkAuthorizade } from '../../middleware/validateTokens.midleware.js';
+import { validateSchema } from '../../middleware/validateSchemas.midleware.js';
 import {
   loginSchema,
   sellerRegisterSchema,
   sellerUpdateSchema,
-} from '../schemas/auth.schema.js';
+} from '../../schemas/auth.schema.js';
 
 //? Instanciamos un router para manejar las rutas
 const sellersRoutes = Router();
@@ -54,9 +53,5 @@ sellersRoutes.delete(
 
 // * cerrar sesión de un vendedor
 sellersRoutes.post(`${routeSellers}/logout`, logOut);
-
-// temporal url para pruebas
-
-sellersRoutes.post(`${routeSellers}/all`, createAllSellers);
 
 export default sellersRoutes;

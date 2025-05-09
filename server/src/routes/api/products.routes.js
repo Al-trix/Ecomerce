@@ -2,7 +2,7 @@ import { Router } from 'express';
 import {
   productUpdateSchema,
   productCreateSchema,
-} from '../schemas/products.schema.js';
+} from '../../schemas/products.schema.js';
 import {
   createProduct,
   deleteProduct,
@@ -10,9 +10,9 @@ import {
   getProducts,
   updateProduct,
   createAllProducts,
-} from '../controllers/products.controllers.js';
-import { checkAuthorizade } from '../middleware/validateTokens.midleware.js';
-import { validateSchema } from '../middleware/validateSchemas.midleware.js';
+} from '../../controllers/api/products.controllers.js';
+import { checkAuthorizade } from '../../middleware/validateTokens.midleware.js';
+import { validateSchema } from '../../middleware/validateSchemas.midleware.js';
 
 //? Instanciamos un router para manejar las rutas
 const productsRoutes = Router();
@@ -53,7 +53,10 @@ productsRoutes.put(
   updateProduct
 );
 
-// temporal url para pruebas
-productsRoutes.post(`${routeProducts}All`, createAllProducts);
+// * crear varios productos
+productsRoutes.post(
+  `/products/createAllProducts/:idSeller`,
+  createAllProducts
+);
 
 export default productsRoutes;

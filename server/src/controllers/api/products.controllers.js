@@ -1,17 +1,17 @@
-import { pool } from '../db.js';
-import { generateUID } from '../libs/generateUID.js';
+import { pool } from '../../db.js';
+import generateUID from '../../libs/generateUID.js';
+import { searchInfoProducts } from '../../libs/searchInfo.js';
 
 export const getProducts = async (req, res) => {
   try {
-    const { rows } = await pool.query('SELECT * FROM products');
-    if (rows.length === 0) {
-      return res.status(404).json({ message: 'No products found' });
-    }
+    const products = await searchInfoProducts(undefined, req.query);
+
     res.status(200).json({
       message: 'Products list',
-      data: rows,
+      data: products,
     });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ message: err.message });
   }
 };
@@ -38,7 +38,7 @@ export const getProduct = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   const { idSeller } = req.params;
-  
+
   const {
     name,
     description,
@@ -150,24 +150,26 @@ export const deleteProduct = async (req, res) => {
 };
 
 export const createAllProducts = async (req, res) => {
+  const productsNews = req.body;
+  const { idSeller } = req.params;
+  try {
+    console.log(productsNews);
 
-   const productsNews = req.body;
-  for (const {
-    id,
-    name,
-    description,
-    price,
-    image_url,
-    stock,
-    seller_id,
-    category,
-    discountPorcentage = 0.0,
-    rating,
-  } of productsNews) {
+    for (const {
+      id,
+      name,
+      description,
+      price,
+      image_url,
+      stock,
+      category,
+      discountPorcentage = 0.0,
+      rating,
+    } of productsNews) {
       const query = `INSERT INTO products (id, name, description, price, image_url, stock, category, discount_percentage, rating, seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) `;
 
       await pool.query(query, [
-        id,
+        generateUID('product'),
         name,
         description,
         price,
@@ -176,12 +178,18 @@ export const createAllProducts = async (req, res) => {
         category,
         discountPorcentage,
         rating,
-        seller_id,
+        idSeller,
       ]);
-  }
+    }
 
-  res.status(201).json({
-    message: 'Products created',
-    data: productsNews,
-  });
+    res.status(201).json({
+      message: 'Products created',
+      data: productsNews,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: err,
+    });
+  }
 };

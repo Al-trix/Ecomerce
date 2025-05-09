@@ -1,5 +1,6 @@
-import { pool } from '../db.js';
-import { generateUID } from '../libs/generateUID.js';
+import { pool } from '../../db.js';
+import generateUID from '../../libs/generateUID.js';
+import { searchInfoCarts } from '../../libs/searchInfo.js';
 
 export const getCart = async (req, res) => {
   const { userId } = req.params;
@@ -11,84 +12,14 @@ export const getCart = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'Cart not found',
+        message: 'Carrito no encontrado',
       });
     }
 
-    const { rows } = await pool.query(
-      'SELECT * FROM cart FULL JOIN products ON products.id = cart.product_id FULL JOIN users ON users.id = cart.user_id WHERE cart.user_id = $1',
-      [userId]
-    );
-
-    console.log(rows);
-    const foundCarts = [];
-
-    if (rows.length > 1) {
-      rows.forEach((row) => {
-        const {
-          id,
-          product_id,
-          quantity,
-          status,
-          name,
-          image_url,
-          description,
-          price,
-          discount_percentage,
-        } = row;
-
-        const dataCart = {
-          data: {
-            id,
-            quantity,
-            status,
-          },
-          product: {
-            id: product_id,
-            name,
-            image_url,
-            description,
-            price,
-            discount_percentage,
-          },
-        };
-
-        foundCarts.push(dataCart);
-      });
-    } else {
-      const {
-        id,
-        product_id,
-        quantity,
-        status,
-        name,
-        image_url,
-        description,
-        price,
-        discount_percentage,
-      } = rows[0];
-
-      const dataCart = {
-        data: {
-          id,
-          quantity,
-          status,
-        },
-        product: {
-          id: product_id,
-          name,
-          image_url,
-          description,
-          price,
-          discount_percentage,
-        },
-      };
-
-      foundCarts.push(dataCart);
-    }
+    const foundCarts = await searchInfoCarts(userId);
 
     res.status(200).json({
-      message: 'Cart found',
+      message: 'Carrito encontrado',
       body: {
         carts: foundCarts,
       },
@@ -100,35 +31,38 @@ export const getCart = async (req, res) => {
 };
 
 export const createCart = async (req, res) => {
-  const { product_id, quantity, status } = req.body;
+  const { product_id, quantity } = req.body;
   const { userId } = req.params;
 
   try {
-    const { rowCount } = await pool.query('SELECT * FROM cart WHERE id = $1', [
-      generateUID('cart'),
-    ]);
+    const { rowCount } = await pool.query(
+      'SELECT * FROM cart WHERE product_id = $1',
+      [product_id]
+    );
 
     if (rowCount > 0) {
-      res.status(400).json({
-        message: 'Cart already exists',
+      return res.status(409).json({
+        message: 'El producto ya existe en el carrito',
       });
     }
 
     const { rows } = await pool.query(
-      'INSERT INTO cart (id, user_id, product_id, quantity, status)  VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [generateUID('cart'), userId, product_id, quantity, status]
+      'INSERT INTO cart (id, user_id, product_id, quantity)  VALUES ($1, $2, $3, $4) RETURNING id;',
+      [generateUID('cart'), userId, product_id, quantity]
     );
 
     if (rows.length === 0) {
       return res.status(404).json({
-        message: 'Cart not created',
+        message: 'Carrito no creado',
       });
     }
+
+    const foundCart = await searchInfoCarts(userId);
 
     res.status(201).json({
       message: 'Cart created successfully',
       body: {
-        cart: rows[0],
+        carts: foundCart,
       },
     });
   } catch (error) {
@@ -144,12 +78,12 @@ export const deleteCart = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'Cart and products not found',
+        message: 'Carrito no encontrado',
       });
     }
 
     res.status(200).json({
-      message: 'Cart and products deleted successfully',
+      message: 'Carrito eliminado correctamente',
     });
   } catch (error) {
     res.status(500).json({ error: error });
@@ -168,12 +102,12 @@ export const updateCart = (req, res) => {
 
     if (rows.length === 0) {
       return res.status(404).json({
-        message: 'Cart not found',
+        message: 'Carrito no encontrado',
       });
     }
 
     res.status(200).json({
-      message: 'Cart updated successfully',
+      message: 'Carrito actualizado correctamente',
       body: {
         cart: rows,
       },

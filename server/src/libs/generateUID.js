@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
-export const generateUID = (opción = null) => {
+const generateUID = (opción = null) => {
   try {
     const id = uuidv4();
 
@@ -27,3 +27,5 @@ export const generateUID = (opción = null) => {
     return null;
   }
 };
+
+export default generateUID;

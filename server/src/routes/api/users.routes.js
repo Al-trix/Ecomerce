@@ -1,19 +1,19 @@
 import { Router } from 'express';
-import { checkAuthorizade } from '../middleware/validateTokens.midleware.js';
+import { checkAuthorizade } from '../../middleware/validateTokens.midleware.js';
 import {
   register,
   login,
   deleteAcount,
   editAcount,
-  createAllUsers,
   logOut,
-} from '../controllers/authUser.contollers.js';
+  validateInfoToken,
+} from '../../controllers/api/authUser.contollers.js';
 import {
   userRegisterSchema,
   loginSchema,
   userUpdateSchema,
-} from '../schemas/auth.schema.js';
-import { validateSchema } from '../middleware/validateSchemas.midleware.js';
+} from '../../schemas/auth.schema.js';
+import { validateSchema } from '../../middleware/validateSchemas.midleware.js';
 
 //? Instanciamos un router para manejar las rutas
 const usersRoutes = Router();
@@ -55,9 +55,12 @@ usersRoutes.put(
 // * cerrar sesión de un usuario
 usersRoutes.post(`${routeAuth}/logout`, logOut);
 
+// * Obtener token y devolverlo al cliente con la cookie 
+usersRoutes.get(
+  `${routeAuth}/token`,
+  checkAuthorizade('user'),
+  validateInfoToken
+);
 
-
-// temporal url para pruebas
-usersRoutes.post(`${routeAuth}/all`, createAllUsers);
 
 export default usersRoutes;

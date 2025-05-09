@@ -4,13 +4,13 @@ import {
   deleteCart,
   getCart,
   updateCart,
-} from '../controllers/cart.controllers.js';
-import { checkAuthorizade } from '../middleware/validateTokens.midleware.js';
-import { validateSchema } from '../middleware/validateSchemas.midleware.js';
+} from '../../controllers/api/cart.controllers.js';
+import { checkAuthorizade } from '../../middleware/validateTokens.midleware.js';
+import { validateSchema } from '../../middleware/validateSchemas.midleware.js';
 import {
   createCartSchema,
   updateCartSchema,
-} from '../schemas/cart.schema.js';
+} from '../../schemas/cart.schema.js';
 
 //? Instanciamos un router para manejar las rutas
 const cartRoutes = Router();

@@ -3,6 +3,8 @@ import { z } from 'zod';
 //? Schema para validar los datos de resgistro del usuario
 export const userRegisterSchema = z.object({
   name: z.string().min(1, 'Nombre requerido').max(50, 'El nombre es muy largo'),
+  avatar: z.string(),
+  city: z.string().min(1, 'Nombre de la ciudad requerido').max(50, 'El nombre es muy largo'),
   email: z.string().email('Email inválido').max(50, 'El email es muy largo'),
   phone: z
     .string()
@@ -22,6 +24,8 @@ export const userRegisterSchema = z.object({
 export const sellerRegisterSchema = z.object({
   name: z.string().min(1, 'Nombre requerido').max(50, 'El nombre es muy largo'),
   email: z.string().email('Email inválido').max(50, 'El email es muy largo'),
+  avatar: z.string(),
+  city: z.string().min(1, 'Nombre de la ciudad requerido').max(50, 'El nombre es muy largo'),
   phone: z
     .string()
     .min(1, 'Teléfono requerido')

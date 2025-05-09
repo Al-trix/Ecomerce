@@ -5,7 +5,7 @@ export const createToken = (payload, role , nameCookie, res) => {
   
   try {
     const payloadToken = jwt.sign(payload, TOKEN_SECRET, {
-      expiresIn : '1h'
+      expiresIn : '3d'
     });
 
     const payloadInfo = {
