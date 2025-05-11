@@ -5,6 +5,7 @@ import {
   updatedSeller,
   deleteSeller,
   logOut,
+  validateInfoTokenSeller
 } from '../../controllers/api/authSeller.controllers.js';
 import { checkAuthorizade } from '../../middleware/validateTokens.midleware.js';
 import { validateSchema } from '../../middleware/validateSchemas.midleware.js';
@@ -53,5 +54,8 @@ sellersRoutes.delete(
 
 // * cerrar sesión de un vendedor
 sellersRoutes.post(`${routeSellers}/logout`, logOut);
+
+// * validar token de un vendedor
+sellersRoutes.get(`${routeSellers}/token`, validateInfoTokenSeller);
 
 export default sellersRoutes;
