@@ -26,8 +26,7 @@ export const createReview = async (req, res) => {
     }
 
     return res.status(201).json({
-      message: 'reseña creada',
-      review,
+      message: 'reseña creada'
     });
   } catch (err) {
     console.log(err);
@@ -50,9 +49,8 @@ export const updateReview = async (req, res) => {
       return res.status(404).json({ message: 'reseña no encontrada' });
     }
 
-    return res.status(200).json({
-      message: 'reseña actualizada',
-      review,
+    return res.status(202).json({
+      message: 'reseña actualizada'
     });
   } catch (err) {
     console.log(err);
@@ -74,9 +72,8 @@ export const deleteReview = async (req, res) => {
       return res.status(404).json({ message: 'reseña no encontrada' });
     }
 
-    return res.status(200).json({
-      message: 'reseña eliminada',
-      review,
+    return res.status(201).json({
+      message: 'reseña eliminada'
     });
   } catch (err) {
     console.log(err);

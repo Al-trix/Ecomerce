@@ -8,7 +8,7 @@ export const getProducts = async (req, res) => {
 
     res.status(200).json({
       message: 'Products list',
-      data: products,
+      body: products,
     });
   } catch (err) {
     console.error(err);
@@ -29,7 +29,7 @@ export const getProduct = async (req, res) => {
 
     res.status(200).json({
       message: 'Product found',
-      data: rows[0],
+      body: rows[0],
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -67,7 +67,7 @@ export const createProduct = async (req, res) => {
 
     res.status(201).json({
       message: 'Product created',
-      data: rows[0],
+      body: rows[0],
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -184,7 +184,7 @@ export const createAllProducts = async (req, res) => {
 
     res.status(201).json({
       message: 'Products created',
-      data: productsNews,
+      body: productsNews,
     });
   } catch (err) {
     console.log(err);

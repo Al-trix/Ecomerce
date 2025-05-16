@@ -16,7 +16,8 @@ const app = express();
 //? Middlewares
 app.use(
   cors({
-    origin: 'http//:localhost:5173',
+    origin: 'http://localhost:5173',
+    credentials: true,
   })
 );
 app.use(morgan('dev')); // * Morgan: nos permite ver las peticiones que llegan al servidor

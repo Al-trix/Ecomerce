@@ -37,7 +37,7 @@ export const createOrder = async (req, res) => {
     );
 
     if (status === 'completed') {
-      const query = 'DELETE FROM cart WHERE user_id = $1';
+      const query =  'DELETE FROM cart WHERE user_id = $1';
       await pool.query(query, [userId]);
     }
 
@@ -46,7 +46,7 @@ export const createOrder = async (req, res) => {
       [generateUID('order'), userId, total[0].total_price, status]
     );
 
-    if (rows.length === 0) {
+    if (order.length === 0) {
       return res.status(404).json({
         message: 'la orden no fue creada',
       });
@@ -68,14 +68,14 @@ export const createOrder = async (req, res) => {
 
       const subtotal = (price - (price * discount_percentage) / 100) * quantity;
 
-      const { rows } = await pool.query(
+      const { rows: items } = await pool.query(
         'INSERT INTO orders_items (id, order_id, product_id, quantity, subtotal) VALUES ($1, $2, $3, $4, $5) RETURNING *',
         [generateUID('order_item'), order[0].id, product_id, quantity, subtotal]
       );
 
       foundOrders.push({
         ordersIT: {
-          orderItemId: rows[0].id,
+          orderItemId: items[0].id,
           subtotal,
         },
         product: {
@@ -92,13 +92,11 @@ export const createOrder = async (req, res) => {
 
     return res.status(201).json({
       message: 'Orden creada',
-      order: rows[0],
-      orderItems: foundOrders,
+      body: { order: order[0], orderItems: foundOrders },
     });
   } catch (error) {
     console.log(error);
-
-    res.status(500).json({ message: 'Error creando la orden', error });
+    res.status(500).json({ message: 'Error creating order', error });
   }
 };
 

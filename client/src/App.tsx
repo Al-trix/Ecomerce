@@ -1,13 +1,11 @@
-import { useSelector } from 'react-redux';
+import { router } from './routes.tsx';
+import { RouterProvider } from 'react-router-dom';
 
 const App = () => {
-  const userState = useSelector((state: unknown) => state.user);
-  console.log(userState);
-
   return (
-    <div>
-      <h1 className="text-2xl">Hello world</h1>
-    </div>
+    <RouterProvider 
+      router={router} 
+    />
   );
 };
 
