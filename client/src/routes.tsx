@@ -1,20 +1,55 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { SuspenseProducts } from './products/pages/lazy/Suspense.tsx';
-import { loaderProducts } from './products/pages/lazy/loader.tsx';
 import Product from './products/components/Product.tsx';
+import TypeAuth from './auth/page/TypeAuth.tsx';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: (
-      <SuspenseProducts />
+    hydrateFallbackElement: (
+      <div>
+        <h1>Loading...</h1>
+      </div>
     ),
-    loader: loaderProducts,
+
+    lazy: async () => {
+      const [component, loader] = await Promise.all([
+        import('./products/page/Products.tsx'),
+        import('./products/page/lazy/loader.tsx'),
+      ]);
+      return {
+        Component: component.default,
+        loader: loader.default,
+      };
+    },
   },
   {
     path: '/products',
-    element: (
-      <Product />
-    ),
+    element: <Product />,
   },
+  {
+    path: '/auth',
+    children: [
+      {
+        index: true,
+        element: <TypeAuth />,
+      },
+      {
+        path: 'register',
+        element: (
+          <div>
+            <h1>Register</h1>
+          </div>
+        ),
+      },
+      {
+        path: 'login',
+        element: (
+          <div>
+            <h1>Login</h1>
+          </div>
+        ),
+      },
+    ],
+  },
+  {},
 ]);

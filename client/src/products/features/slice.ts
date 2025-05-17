@@ -9,10 +9,10 @@ const productsReducer = createSlice({
   initialState,
   reducers: {
     addProductsToState: (state, action: PayloadAction<ProductsResponse>) => {
-      if (Array.isArray(action.payload) && Array.isArray(state)) {
-        return [...action.payload];  // Reemplaza el estado con los nuevos productos
+      if (Array.isArray(action.payload) && Array.isArray(state)) {                
+        return [...state,...action.payload];  
       }
-      return state;  // Devuelve el estado sin cambios si la condición no se cumple
+      return state  
     },
   },
 });
