@@ -1,24 +1,11 @@
 import { useLoaderData } from 'react-router-dom';
 import type { ProductsResponse } from '../../types/shopServices';
-import { useAppDispatch } from '../../hooks/store.ts';
-import { useEffect } from 'react';
-import { addProductsToState } from '../features/slice.ts';
 import { NavLink } from 'react-router-dom';
 import Layout from '../../layaout/Layaout.tsx';
 
 const Products = () => {
   const productsInfo = useLoaderData<ProductsResponse>();
-  const dispatch = useAppDispatch();
-  console.log(productsInfo);
-  useEffect(() => {
-    if (Array.isArray(productsInfo)) {
-      dispatch(addProductsToState(productsInfo));
-      return;
-    } else {
-      dispatch(addProductsToState([]));
-    }
-  }, []);
-
+  
   if (!Array.isArray(productsInfo)) {
     type messageError = {
       message: string;

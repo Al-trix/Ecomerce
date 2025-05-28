@@ -20,6 +20,7 @@ export interface AuthSeller extends Auth {
 }
 
 export type PartialAuthUser = Partial<Auth>;
+
 export type PartialAuthSeller = Partial<AuthSeller>;
 export type AuthLogin = Pick<AuthUser, 'email' | 'password'> 
 

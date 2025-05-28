@@ -3,6 +3,8 @@ import setupSocket from './socket/chat.js'
 import { createServer } from 'http';
 import { PORT } from './config.js';
 
+
+
 const server = createServer(app);
 setupSocket(server)
 

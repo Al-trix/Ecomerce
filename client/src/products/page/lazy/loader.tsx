@@ -1,4 +1,5 @@
 import { getProducts } from '../../api/actions.ts';
+import {useSuspenseQuery} from '@tanstack/react-query'
 
 const loaderProducts = async () => {
   try {

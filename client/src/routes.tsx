@@ -1,5 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Product from './products/components/Product.tsx';
+import AuthLogin from './auth/page/AuthLogin.tsx';
 import TypeAuth from './auth/page/TypeAuth.tsx';
 
 export const router = createBrowserRouter([
@@ -34,20 +35,38 @@ export const router = createBrowserRouter([
         element: <TypeAuth />,
       },
       {
-        path: 'register',
-        element: (
-          <div>
-            <h1>Register</h1>
-          </div>
-        ),
+        path: 'seller',
+        children: [
+          {
+            index: true,
+            element: <TypeAuth />,
+          },
+          {
+            path: 'register',
+            element: <div>Register seller</div>,
+          },
+          {
+            path: 'login',
+            element: <AuthLogin />,
+          },
+        ],
       },
       {
-        path: 'login',
-        element: (
-          <div>
-            <h1>Login</h1>
-          </div>
-        ),
+        path: 'user',
+        children: [
+          {
+            index: true,
+            element: <TypeAuth />,
+          },
+          {
+            path: 'register',
+            element: <div>Register user</div>,
+          },
+          {
+            path: 'login',
+            element: <div>Login user</div>,
+          },
+        ],
       },
     ],
   },

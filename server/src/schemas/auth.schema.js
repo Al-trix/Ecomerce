@@ -2,55 +2,79 @@ import { z } from 'zod';
 
 //? Schema para validar los datos de resgistro del usuario
 export const userRegisterSchema = z.object({
-  name: z.string().min(1, 'Nombre requerido').max(50, 'El nombre es muy largo'),
-  avatar: z.string(),
-  city: z.string().min(1, 'Nombre de la ciudad requerido').max(50, 'El nombre es muy largo'),
-  email: z.string().email('Email inválido').max(50, 'El email es muy largo'),
+  name: z
+    .string({
+      required_error: 'Nombre requerido',
+    })
+    .min(1, 'El nombre es demasiado corto')
+    .max(50, 'El nombre es muy largo'),
+  avatar: z.string({
+    required_error: 'Avatar requerido',
+  }),
+  city: z
+    .string({
+      required_error: 'Nombre de la ciudad requerido',
+    })
+    .min(1, 'Nombre de la ciudad es demasiado corto')
+    .max(30, 'El nombre es muy largo'),
+  email: z
+    .string({
+      required_error: 'Email requerido',
+    })
+    .email('Email inválido')
+    .max(50, 'El email es muy largo'),
   phone: z
-    .string()
-    .min(1, 'Teléfono requerido')
+    .string({
+      required_error: 'Teléfono requerido',
+    })
+    .min(1, 'Teléfono demasiado corto')
     .max(15, ' El teléfono es muy largo'),
   address: z
-    .string()
-    .min(1, 'Dirección requerida')
+    .string({
+      required_error: 'Dirección requerida',
+    })
+    .min(1, 'Dirección demasiado corta')
     .max(100, 'La dirección es muy larga'),
   password: z
-    .string()
-    .min(8, 'Contraseña requerida')
+    .string({
+      required_error: 'Contraseña requerida',
+    })
+    .min(8, 'Contraseña demasiado corta')
     .max(70, 'La contraseña es muy larga'),
 });
 
 //? Schema para validar los datos de resgistro del vendedor
 export const sellerRegisterSchema = z.object({
-  name: z.string().min(1, 'Nombre requerido').max(50, 'El nombre es muy largo'),
-  email: z.string().email('Email inválido').max(50, 'El email es muy largo'),
-  avatar: z.string(),
-  city: z.string().min(1, 'Nombre de la ciudad requerido').max(50, 'El nombre es muy largo'),
-  phone: z
-    .string()
-    .min(1, 'Teléfono requerido')
-    .max(15, ' El teléfono es muy largo'),
+  ...userRegisterSchema.pick({
+    name: true,
+    avatar: true,
+    city: true,
+    email: true,
+    phone: true,
+    address: true,
+    password: true,
+  }).shape,
   store_name: z
-    .string()
-    .min(1, 'Nombre de la tienda requerido')
-    .max(50, 'El nombre de la tienda es muy largo'),
-  password: z
-    .string()
-    .min(8, 'Contraseña requerida')
-    .max(70, 'La contraseña es muy larga'),
+    .string({
+      required_error: 'Nombre de la tienda requerido',
+    })
+    .min(1, 'Nombre de la tienda es demasiado corto')
+    .max(50, 'El nombre es muy largo'),
 });
 
 //? Schema para validar los datos a editar del vendedor
 export const sellerUpdateSchema = sellerRegisterSchema.partial();
 
-//? Schema para validar los datos de login del usuario y vendedor
-export const loginSchema = z.object({
-  email: z.string().email('Email inválido').max(50, 'El email es muy largo'),
-  password: z
-    .string()
-    .min(8, 'Contraseña requerida')
-    .max(70, 'La contraseña es muy larga'),
-});
 
 //? Schema para validar los datos a editar del usuario
 export const userUpdateSchema = userRegisterSchema.partial();
+
+//? Schema para validar los datos de login del usuario y vendedor
+export const loginSchema = z.object(
+  userRegisterSchema.pick({
+    email: true,
+    password: true,
+  }).shape
+);
+
+
