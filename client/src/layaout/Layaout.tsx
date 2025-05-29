@@ -1,10 +1,13 @@
-import type { FC, ReactNode } from 'react';
 import Header from "./components/Header.tsx";
-const layaout: FC<{ children: ReactNode }> = ({ children }) => {
+import { Outlet } from 'react-router';
+
+const layaout = () => {
   return (
     <div className='container mx-auto '>
       <Header />
-      <main>{children}</main>
+      <main>
+        <Outlet />
+      </main>
     </div>
 
   );

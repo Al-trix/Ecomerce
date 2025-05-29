@@ -28,5 +28,5 @@
       "@schemas/*": ["../server/src/schemas/*"]
     },   
   },
-  "include": ["src"]
+  "include": ["src", "router/routes.tsx"]
 }

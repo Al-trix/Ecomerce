@@ -1,13 +1,15 @@
 import { getProducts } from '../../api/actions.ts';
-import {useSuspenseQuery} from '@tanstack/react-query'
+import { queryClient } from '../../../lib/queryClient';
 
 const loaderProducts = async () => {
-  try {
-    const res = await getProducts(15, 1);
-    return res.data.body;
-  } catch (error) {
-    throw new Error(`Error cargando los productos: ${error}`);
-  }
+  return await queryClient.ensureQueryData({
+    queryKey: ['products'],
+    queryFn: async () => {
+
+      const { data } = await getProducts(15, 1);
+      return data;
+    },
+  });
 };
 
 export default loaderProducts;

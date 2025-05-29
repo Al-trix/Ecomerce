@@ -1,5 +1,16 @@
 import type { AuthSeller } from './auth';
 
+//! Types para errores
+export type MessageError = {
+  message: string;
+};
+
+//! Types para respuestas
+export type DataResponseProducts = {
+  message: string;
+  body: ProductsResponse;
+};
+
 //! Types para el carrito
 export type Cart = {
   userId: string | null;
@@ -61,7 +72,7 @@ export type Product = {
   image_url: string | null;
   stock: number | null;
   category: string | null;
-  discountPorcentage: number | null;
+  discountPercentage: number | null;
   rating: number | null;
 } | null;
 

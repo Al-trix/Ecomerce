@@ -1,4 +1,3 @@
-import Layout from '../../layaout/Layaout.tsx';
 import { FaShop } from 'react-icons/fa6';
 import { FaUserAlt } from 'react-icons/fa';
 import { useState } from "react";
@@ -17,7 +16,6 @@ const TypeAuth = () => {
     return <Navigate to={`/auth/${type}/login`} replace/>; 
   }
   return (
-    <Layout>
       <section  className=" mt-13 flex flex-col items-center justify-center">
         <h2 className="text-4xl font-medium tracking-widest">
           Elije tu tipo de usuario
@@ -55,7 +53,6 @@ const TypeAuth = () => {
           </article>
         </div>
       </section>
-    </Layout>
   );
 };
 
