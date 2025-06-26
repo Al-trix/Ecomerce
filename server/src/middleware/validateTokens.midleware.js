@@ -9,7 +9,6 @@ import { pool } from '../db.js';
 //? Si el token no existe se le manda un error al cliente
 export const checkAuthorizade = (typeUser) => (req, res, next) => {
   const { access_token } = req.cookies;
-
   try {
     if (typeUser === 'user' && !req.user && !access_token) {
       return res.status(401).json({
@@ -38,6 +37,9 @@ export const checkAuthorizade = (typeUser) => (req, res, next) => {
       next();
       return;
     }
+    return res.status(403).json({
+      message: 'Token invalido'
+    });
   } catch (err) {
     console.error('Error verifying token:', err);
     return res.status(403).json({
@@ -48,13 +50,11 @@ export const checkAuthorizade = (typeUser) => (req, res, next) => {
 
 export const checkAuthorizadeSocket = (io) => {
   io.use(async (socket, next) => {
-
     let { token } = socket.handshake.auth;
 
     if (!token) {
       return next(new Error('Token no proporcionado'));
     }
-
 
     try {
       if (typeof token === 'string' && token.startsWith('j%3A')) {
@@ -62,7 +62,6 @@ export const checkAuthorizadeSocket = (io) => {
         const parsed = JSON.parse(decoded.slice(2)); // Quitar 'j:' y parsear
         token = parsed.data; // Extraer el JWT puro
       }
-
 
       const decodedVerify = jwt.verify(token, TOKEN_SECRET);
 
@@ -95,4 +94,3 @@ export const checkAuthorizadeSocket = (io) => {
     }
   });
 };
-

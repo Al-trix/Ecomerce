@@ -4,11 +4,15 @@ import { searchInfoProducts } from '../../libs/searchInfo.js';
 
 export const getProducts = async (req, res) => {
   try {
-    const products = await searchInfoProducts(undefined, req.query);
-
+    const products = await searchInfoProducts(req.query);
     res.status(200).json({
-      message: 'Products list',
-      body: products,
+      message: 'Lista de productos',
+      body: {
+          products,
+          totalProducts: products.length,
+          limit: Number(req.query.limit) || 10,
+          page: Number(req.query.page) || 1,
+        },
     });
   } catch (err) {
     console.error(err);
@@ -24,15 +28,23 @@ export const getProduct = async (req, res) => {
       [id]
     );
     if (rowCount === 0) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({
+        error: {
+          message: 'Producto no encontrado',
+        },
+      });
     }
 
     res.status(200).json({
-      message: 'Product found',
+      message: 'Producto encontrado',
       body: rows[0],
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      error: {
+        message: error.message,
+      },
+    });
   }
 };
 
@@ -66,11 +78,15 @@ export const createProduct = async (req, res) => {
     ]);
 
     res.status(201).json({
-      message: 'Product created',
+      message: 'Producto creado correctamente',
       body: rows[0],
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      error: {
+        message: err.message,
+      },
+    });
   }
 };
 
@@ -114,16 +130,24 @@ export const updateProduct = async (req, res) => {
     ]);
 
     if (rowCount === 0) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({
+        error: {
+          message: 'Producto no encontrado',
+        },
+      });
     }
     res.status(200).json({
-      message: 'Product updated successfully',
+      message: 'Producto actualizado correctamente',
       body: {
         user: rows[0],
       },
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      error: {
+        message: err.message,
+      },
+    });
   }
 };
 
@@ -137,59 +161,22 @@ export const deleteProduct = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'Product not found',
+        error: {
+          message: 'Producto no encontrado',
+        },
       });
     }
 
     res.status(200).json({
-      message: 'Product deleted successfully',
+      message: 'Producto eliminado correctamente',
     });
   } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-
-export const createAllProducts = async (req, res) => {
-  const productsNews = req.body;
-  const { idSeller } = req.params;
-  try {
-    console.log(productsNews);
-
-    for (const {
-      id,
-      name,
-      description,
-      price,
-      image_url,
-      stock,
-      category,
-      discountPorcentage = 0.0,
-      rating,
-    } of productsNews) {
-      const query = `INSERT INTO products (id, name, description, price, image_url, stock, category, discount_percentage, rating, seller_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) `;
-
-      await pool.query(query, [
-        generateUID('product'),
-        name,
-        description,
-        price,
-        image_url,
-        stock,
-        category,
-        discountPorcentage,
-        rating,
-        idSeller,
-      ]);
-    }
-
-    res.status(201).json({
-      message: 'Products created',
-      body: productsNews,
-    });
-  } catch (err) {
-    console.log(err);
     res.status(500).json({
-      message: err,
+      error: {
+        message: err.message,
+      },
     });
   }
 };
+
+

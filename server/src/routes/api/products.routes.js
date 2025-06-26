@@ -9,7 +9,6 @@ import {
   getProduct,
   getProducts,
   updateProduct,
-  createAllProducts,
 } from '../../controllers/api/products.controllers.js';
 import { checkAuthorizade } from '../../middleware/validateTokens.midleware.js';
 import { validateSchema } from '../../middleware/validateSchemas.midleware.js';
@@ -53,10 +52,6 @@ productsRoutes.put(
   updateProduct
 );
 
-// * crear varios productos
-productsRoutes.post(
-  `/products/createAllProducts/:idSeller`,
-  createAllProducts
-);
+
 
 export default productsRoutes;

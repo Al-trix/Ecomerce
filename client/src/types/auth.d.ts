@@ -8,7 +8,7 @@ export interface Auth {
   name: string | null;
   email: string | null;
   password: string | null;
-  adress: string | null;
+  address: string | null;
   phone: string | null;
   avatar: string | null;
   city: string | null;
@@ -19,10 +19,12 @@ export interface AuthSeller extends Auth {
   rating: number | null;
 }
 
+
 export type PartialAuthUser = Partial<Auth>;
 
 export type PartialAuthSeller = Partial<AuthSeller>;
 export type AuthLogin = Pick<AuthUser, 'email' | 'password'> 
+export type AuthPartialLogin = Partial<AuthLogin>
 
 export type AuthUserResponse = {
   user: AuthUser & {id: string} | null;
@@ -33,4 +35,13 @@ export type AuthUserResponse = {
 export type AuthSellerResponse = {
   seller: AuthSeller & {id: string} | null;
   products: ProductsResponde[] | [];  
+}
+export type responseAuthUser = {
+  message: string;
+  body: AuthUserResponse;
+}
+
+export type responseAuthSeller = {
+  message: string;
+  body: AuthSellerResponse;
 }

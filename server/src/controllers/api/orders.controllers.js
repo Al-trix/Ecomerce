@@ -9,10 +9,17 @@ export const getOrders = async (req, res) => {
 
     return res.status(200).json({
       message: 'Ordenes encontradas',
-      orders,
+      body: {
+        orders,
+      },
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching orders', error });
+    res.status(500).json({
+      error: {
+        message: 'Error fetching orders',
+        error,
+      },
+    });
   }
 };
 
@@ -28,7 +35,9 @@ export const createOrder = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'No tienes productos en el carrito',
+        error: {
+          message: 'No tienes productos en el carrito',
+        },
       });
     }
 
@@ -37,7 +46,7 @@ export const createOrder = async (req, res) => {
     );
 
     if (status === 'completed') {
-      const query =  'DELETE FROM cart WHERE user_id = $1';
+      const query = 'DELETE FROM cart WHERE user_id = $1';
       await pool.query(query, [userId]);
     }
 
@@ -48,7 +57,9 @@ export const createOrder = async (req, res) => {
 
     if (order.length === 0) {
       return res.status(404).json({
-        message: 'la orden no fue creada',
+        error: {
+          message: 'la orden no fue creada',
+        },
       });
     }
 
@@ -96,7 +107,12 @@ export const createOrder = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Error creating order', error });
+    res.status(500).json({
+      error: {
+        message: 'Error creating order',
+        error,
+      },
+    });
   }
 };
 
@@ -109,17 +125,29 @@ export const deleteOrder = async (req, res) => {
     );
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'No tienes ordenes registradas',
+        error: {
+          message: 'No tienes ordenes registradas',
+        },
       });
     }
 
     await pool.query('DELETE FROM orders WHERE id = $1', [id]);
 
     return res.status(200).json({
-      message: 'Orden eliminada',
+      data: {
+        message: 'Orden eliminada',
+      },
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error deleting order', error });
+    console.log(error);
+    res.status(500).json({
+      data: {
+        error: {
+          message: 'Error deleting order',
+          error,
+        },
+      },
+    });
   }
 };
 
@@ -133,7 +161,9 @@ export const editOrder = async (req, res) => {
     );
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'No tienes ordenes registradas',
+        error: {
+          message: 'No tienes ordenes registradas',
+        },
       });
     }
 
@@ -144,7 +174,9 @@ export const editOrder = async (req, res) => {
 
     if (rows.length === 0) {
       return res.status(404).json({
-        message: 'la orden no fue editada',
+        error: {
+          message: 'la orden no fue editada',
+        },
       });
     }
 
@@ -153,6 +185,12 @@ export const editOrder = async (req, res) => {
       order: rows[0],
     });
   } catch (error) {
-    res.status(500).json({ message: 'Error editing order', error });
+    console.log(error);
+    res.status(500).json({
+      error: {
+        message: 'Error editing order',
+        error,
+      },
+    });
   }
 };

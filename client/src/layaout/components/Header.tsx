@@ -28,10 +28,7 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link to="/auth" content="Registrarse" />
-            </li>
-            <li>
-              <Link to="/auth" content="Iniciar Sesión" />
+              <Link to="/auth" content="Empecemos" />
             </li>
           </div>
         </ul>

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 //? Schema para validar los datos de resgistro del usuario
-export const userRegisterSchema = z.object({
+export const RegisterSchema = z.object({
   name: z
     .string({
       required_error: 'Nombre requerido',
@@ -41,37 +41,38 @@ export const userRegisterSchema = z.object({
     })
     .min(8, 'La contraseña debe ser de 8 caracteres o más')
     .max(70, 'La contraseña es muy larga'),
+  confirmPassword: z
+    .string({
+      required_error: 'Confirmar contraseña requerida',
+    })
+    .min(8, 'La contraseña debe ser de 8 caracteres o más')
+    .max(70, 'La contraseña es muy larga'),
 });
 
+//? Schema para validar los datos de resgistro del usuario
+export const userRegisterSchema = z
+  .object(RegisterSchema.shape)
+  .refine((data) => data.confirmPassword === data.password, {
+    message: 'Las contraseñas no coinciden',
+    path: ['confirmPassword'],
+  });
+
 //? Schema para validar los datos de resgistro del vendedor
-export const sellerRegisterSchema = z.object({
-  ...userRegisterSchema.pick({
-    name: true,
-    avatar: true,
-    city: true,
-    email: true,
-    phone: true,
-    address: true,
-    password: true,
-  }).shape,
-  store_name: z
-    .string({
-      required_error: 'Nombre de la tienda requerido',
-    })
-    .min(1, 'Nombre de la tienda es demasiado corto')
-    .max(50, 'El nombre es muy largo'),
+export const sellerRegisterSchema = RegisterSchema.extend({
+  store_name: z.string({
+    required_error: 'Nombre de la tienda requerido',
+  }),
 });
 
 //? Schema para validar los datos a editar del vendedor
 export const sellerUpdateSchema = sellerRegisterSchema.partial();
 
-
 //? Schema para validar los datos a editar del usuario
-export const userUpdateSchema = userRegisterSchema.partial();
+export const userUpdateSchema = RegisterSchema.partial();
 
 //? Schema para validar los datos de login del usuario y vendedor
 export const loginSchema = z.object(
-  userRegisterSchema.pick({
+  RegisterSchema.pick({
     email: true,
     password: true,
   }).shape
@@ -83,9 +84,3 @@ export type SellerRegister = z.infer<typeof sellerRegisterSchema>;
 export type SellerUpdate = z.infer<typeof sellerUpdateSchema>;
 export type UserUpdate = z.infer<typeof userUpdateSchema>;
 export type Login = z.infer<typeof loginSchema>;
-
-
-
-
-
-

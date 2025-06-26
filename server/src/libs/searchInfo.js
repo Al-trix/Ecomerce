@@ -138,10 +138,49 @@ export const searchInfoOrders = async (id) => {
   }
 };
 
-export const searchInfoProducts = async (id, query = {}) => {
-  const page = parseInt(query.page) || 1;
-  const limit = parseInt(query.limit) || 10;
+export const searchInfoProducts = async (id = null, query = {}) => {
+  const { page: queryPage, limit: queryLimit, ...filters } = queryParamsInput;
+
+  const page = parseInt(queryPage) || 1;
+  const limit = parseInt(queryLimit) || 10;
   const offset = (page - 1) * limit;
+
+  const conditionsFilters = [];
+  const valuesFilters = [];
+  let paramCounter = 1;
+
+  const limitParam = valuesFilters.length - 1; 
+  const offsetParam = valuesFilters.length;  
+
+  if (filters.category) {
+    conditionsFilters.push(`p.category = $${paramCounter++}`);
+    valuesFilters.push(filters.category);
+  }
+  if (filters.name) {
+    conditionsFilters.push(`p.name ILIKE $${paramCounter++}`);
+    valuesFilters.push(`%${filters.name}%`); // Add wildcards for ILIKE search
+  }
+  if (filters.price && !isNaN(parseFloat(filters.price))) {
+    conditionsFilters.push(`p.price = $${paramCounter++}`);
+    valuesFilters.push(parseFloat(filters.price));
+  }
+  if (filters.rating && !isNaN(parseFloat(filters.rating))) {
+    conditionsFilters.push(`p.rating = $${paramCounter++}`);
+    valuesFilters.push(parseFloat(filters.rating));
+  }
+  if (
+    filters.discount_percentage &&
+    !isNaN(parseFloat(filters.discount_percentage))
+  ) {
+    conditionsFilters.push(`p.discount_percentage = $${paramCounter++}`);
+    valuesFilters.push(parseFloat(filters.discount_percentage));
+  }
+  if (filters.stock && !isNaN(parseInt(filters.stock))) {
+    conditionsFilters.push(`p.stock = $${paramCounter++}`);
+    valuesFilters.push(parseInt(filters.stock));
+  }
+
+
   const querys = {
     queryProductsById: `
     SELECT * 
@@ -171,10 +210,15 @@ export const searchInfoProducts = async (id, query = {}) => {
     p.image_url,
     p.category
     FROM products p
-    INNER JOIN sellers s ON p.seller_id = s.id 
+    INNER JOIN sellers s ON p.seller_id = s.id  
+    ${
+      conditionsFilters.length > 0
+        ? 'WHERE ' + conditionsFilters.join(' AND ')
+        : ''
+    }
     ORDER BY p.created_at DESC
-    LIMIT $1 
-    OFFSET $2
+    LIMIT $${limitParam}
+    OFFSET $${offsetParam}
     `,
 
     queryReviewsProducts: `
@@ -194,7 +238,7 @@ export const searchInfoProducts = async (id, query = {}) => {
   try {
     const { rows: products } = await pool.query(
       id ? querys.queryProductsById : querys.queryProducts,
-      id ? [id] : [limit, offset]
+      id ? [id] : valuesFilters
     );
 
     if (products.length === 0) {

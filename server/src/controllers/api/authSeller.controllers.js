@@ -28,19 +28,25 @@ export const registerSeller = async (req, res) => {
 
     if (isUserStoreName.rows.length > 0) {
       return res.status(400).json({
-        message: 'El nombre de la tienda ya está registrado',
+        error: {
+          store_name: 'El nombre de la tienda ya está registrado',
+        },
       });
     }
 
     if (isUserPhone.rows.length > 0) {
       return res.status(400).json({
-        message: 'El teléfono ya está registrado',
+        error: {
+          phone: 'El teléfono ya está registrado',
+        },
       });
     }
 
     if (isUserEmail.rows.length > 0) {
       return res.status(400).json({
-        message: 'El correo ya está registrado',
+        error: {
+          email: 'El correo ya está registrado',
+        },
       });
     }
 
@@ -63,11 +69,24 @@ export const registerSeller = async (req, res) => {
     res.status(202).json({
       message: 'Usuario creado correctamente',
       body: {
-        user: seller[0],
+        user: {
+          id: seller[0].id,
+          name: seller[0].name,
+          email: seller[0].email,
+          phone: seller[0].phone,
+          store_name: seller[0].store_name,
+          avatar: seller[0].avatar,
+          city: seller[0].city,
+        },
+        products: [],
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
     console.log(err);
   }
 };
@@ -82,7 +101,9 @@ export const loginSeller = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'El correo no está registrado',
+        error: {
+          email: 'El correo no está registrado',
+        },
       });
     }
 
@@ -90,7 +111,9 @@ export const loginSeller = async (req, res) => {
 
     if (!isMatch) {
       return res.status(401).json({
-        message: 'Your password is incorrect',
+        error: {
+          password: 'La contraseña es incorrecta',
+        },
       });
     }
 
@@ -100,12 +123,24 @@ export const loginSeller = async (req, res) => {
     res.status(200).json({
       message: 'Se ha iniciado sesión correctamente',
       body: {
-        user: seller[0],
+        user: {
+          id: seller[0].id,
+          name: seller[0].name,
+          email: seller[0].email,
+          phone: seller[0].phone,
+          store_name: seller[0].store_name,
+          avatar: seller[0].avatar,
+          city: seller[0].city,
+        },
         products: productsCreate,
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
     console.log(err);
   }
 };
@@ -119,15 +154,23 @@ export const deleteSeller = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'Usuario no encontrado',
+        error: {
+          message: 'Usuario no encontrado',
+        },
       });
     }
 
     res.status(200).json({
-      message: 'Usuario eliminado correctamente',
+      data: {
+        message: 'Usuario eliminado correctamente',
+      },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+        error: {
+          message: 'error interno del servidor',
+        },
+    });
     console.log(err);
   }
 };
@@ -137,10 +180,18 @@ export const logOut = async (req, res) => {
     res.clearCookie('access_token');
 
     res.status(200).json({
-      message: 'Se ha cerrado sesión correctamente',
+      data: {
+        message: 'Se ha cerrado sesión correctamente',
+      },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      data: {
+        error: {
+          message: 'error interno del servidor',
+        },
+      },
+    });
     console.log(err);
   }
 };
@@ -172,10 +223,18 @@ export const updatedSeller = async (req, res) => {
     ]);
 
     res.status(200).json({
-      message: 'Usuario actualizado correctamente',
-      body: {
-        user: rows[0],
-      },
+        message: 'Usuario actualizado correctamente',
+        body: {
+          user: {
+            name: rows[0].name,
+            email: rows[0].email,
+            phone: rows[0].phone,
+            store_name: rows[0].store_name,
+            avatar: rows[0].avatar,
+            city: rows[0].city,
+          },
+          products: rows[0].products,
+        },
     });
   } catch (err) {
     res.status(500).json({ error: err });
@@ -194,18 +253,27 @@ export const validateInfoTokenSeller = async (req, res) => {
 
     if (seller.length === 0) {
       return res.status(404).json({
-        message: 'Usuario no encontrado',
+        error: {
+          message: 'Usuario no encontrado',
+        },
       });
     }
 
     const productsCreate = await searchInfoProducts(seller[0].id);
 
     res.status(200).json({
-      message: 'Usuario encontrado',
-      body: {
-        user: user[0],
-        products: productsCreate,
-      },
+        message: 'Usuario encontrado',
+        body: {
+          user: {
+            name: seller[0].name,
+            email: seller[0].email,
+            phone: seller[0].phone,
+            store_name: seller[0].store_name,
+            avatar: seller[0].avatar,
+            city: seller[0].city,
+          },
+          products: productsCreate,
+        },
     });
   } catch (err) {
     res.status(500).json({ error: err });

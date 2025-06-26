@@ -10,10 +10,12 @@ export const createReview = async (req, res) => {
       [userId]
     );
 
-    console.log(userId, product_id, rating, comment);
-
     if (!user) {
-      return res.status(404).json({ message: 'usuario no encontrado' });
+      return res.status(404).json({
+        error: {
+          message: 'Usuario no encontrado',
+        },
+      });
     }
 
     const { rows: review } = await pool.query(
@@ -22,16 +24,23 @@ export const createReview = async (req, res) => {
     );
 
     if (!review) {
-      return res.status(404).json({ message: 'reseña no creada' });
+      return res.status(404).json({
+        error: {
+          message: 'Reseña no creada',
+        },
+      });
     }
 
     return res.status(201).json({
-      message: 'reseña creada'
+      message: 'Reseña creada',
+      body: review,
     });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
-      message: 'error interno del servidor',
+      error: {
+        message: 'error interno del servidor',
+      },
     });
   }
 };
@@ -46,16 +55,22 @@ export const updateReview = async (req, res) => {
     );
 
     if (!review) {
-      return res.status(404).json({ message: 'reseña no encontrada' });
+      return res.status(404).json({
+        error: {
+          message: 'Reseña no encontrada',
+        },
+      });
     }
 
     return res.status(202).json({
-      message: 'reseña actualizada'
+      message: 'reseña actualizada',
     });
   } catch (err) {
     console.log(err);
     return res.status(500).json({
-      message: 'error interno del servidor',
+      error: {
+        message: 'error interno del servidor',
+      },
     });
   }
 };
@@ -69,7 +84,11 @@ export const deleteReview = async (req, res) => {
     );
 
     if (!review) {
-      return res.status(404).json({ message: 'reseña no encontrada' });
+      return res.status(404).json({
+        error: {
+          message: 'Reseña no encontrada',
+        },
+      });
     }
 
     return res.status(201).json({
@@ -78,7 +97,9 @@ export const deleteReview = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res.status(500).json({
-      message: 'error interno del servidor',
+      error: {
+        message: 'error interno del servidor',
+      },
     });
   }
 };

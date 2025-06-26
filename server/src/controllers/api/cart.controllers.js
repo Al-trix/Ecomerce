@@ -12,7 +12,9 @@ export const getCart = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'Carrito no encontrado',
+        error: {
+          message: 'Carrito no encontrado',
+        },
       });
     }
 
@@ -26,7 +28,11 @@ export const getCart = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
   }
 };
 
@@ -42,7 +48,9 @@ export const createCart = async (req, res) => {
 
     if (rowCount > 0) {
       return res.status(409).json({
-        message: 'El producto ya existe en el carrito',
+        error: {
+          message: 'El producto ya existe en el carrito',
+        },
       });
     }
 
@@ -53,21 +61,27 @@ export const createCart = async (req, res) => {
 
     if (rows.length === 0) {
       return res.status(404).json({
-        message: 'Carrito no creado',
+        error: {
+          message: 'Carrito no creado',
+        },
       });
     }
 
     const foundCart = await searchInfoCarts(userId);
 
     res.status(201).json({
-      message: 'Cart created successfully',
+      message: 'Carrito creado correctamente',
       body: {
         carts: foundCart,
       },
     });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ error: error });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
   }
 };
 
@@ -78,7 +92,9 @@ export const deleteCart = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'Carrito no encontrado',
+        error: {
+          message: 'Carrito no encontrado',
+        },
       });
     }
 
@@ -86,7 +102,12 @@ export const deleteCart = async (req, res) => {
       message: 'Carrito eliminado correctamente',
     });
   } catch (error) {
-    res.status(500).json({ error: error });
+    console.log(error);
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
   }
 };
 
@@ -102,7 +123,9 @@ export const updateCart = (req, res) => {
 
     if (rows.length === 0) {
       return res.status(404).json({
-        message: 'Carrito no encontrado',
+        error: {
+          message: 'Carrito no encontrado',
+        },
       });
     }
 
@@ -113,35 +136,12 @@ export const updateCart = (req, res) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ error: error });
-  }
-};
-
-//temporal url
-export const allCarts = async (req, res) => {
-  try {
-    const carts = req.body;
-    for (const cart of carts) {
-      const { userId, productId, quantity } = cart;
-      const { rows } = await pool.query(
-        'INSERT INTO cart (id, user_id, product_id, quantity) VALUES ($1, $2, $3, $4) RETURNING *',
-        [generateUID('cart'), userId, productId, quantity]
-      );
-
-      if (rows.length === 0) {
-        return res.status(404).json({
-          message: 'Cart not created',
-        });
-      }
-    }
-
-    res.status(201).json({
-      message: 'Carts created successfully',
-      body: {
-        carts: carts,
+    console.log(error);
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
       },
     });
-  } catch (error) {
-    res.status(500).json({ error: error });
   }
 };
+

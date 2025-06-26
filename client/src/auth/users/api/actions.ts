@@ -1,8 +1,8 @@
-import axios from '../../api/instance.ts';
-import type { FuntionActionsApi } from '../../types/funtions.d.ts';
-import { enums } from '../../types/constantes.ts';
+import axios from '../../../api/instance.ts';
+import type { FuntionActionsApi } from '../../../types/funtions.d.ts';
+import { enums } from '../../../types/constantes.ts';
 
-export const registerUse: FuntionActionsApi['users']['register'] = (dataUser) =>
+export const registerUser: FuntionActionsApi['users']['register'] = (dataUser) =>
   axios.post(`${enums.USER}/register`, dataUser);
 
 export const loginUser: FuntionActionsApi['users']['login'] = (dataUser) =>
@@ -19,5 +19,5 @@ export const updateUser: FuntionActionsApi['users']['update'] = (
   dataUser
 ) => axios.put(`${enums.USER}/${userId}`, dataUser);
 
-export const getUserForToken: FuntionActionsApi['users']['getUserForToken'] =
-  () => axios.get(`${enums.USER}/token`);
+export const getUserForToken: FuntionActionsApi['users']['getUserForToken'] = () =>
+  axios.get(`${enums.USER}/token`); 

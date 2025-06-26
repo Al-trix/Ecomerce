@@ -19,13 +19,17 @@ export const register = async (req, res) => {
 
     if (isUserPhone.rows.length > 0) {
       return res.status(400).json({
-        message: 'El teléfono ya está registrado',
+        error: {
+          phone: 'El teléfono ya está registrado',
+        },
       });
     }
 
     if (isUserEmail.rows.length > 0) {
       return res.status(400).json({
-        message: 'El correo ya está registrado',
+        error: {
+          email: 'El correo ya está registrado',
+        },
       });
     }
 
@@ -45,16 +49,30 @@ export const register = async (req, res) => {
       city,
     ]);
 
-    createToken({ id: user[0].id }, '', 'access_token', res);
+    createToken({ id: user[0].id }, 'user', 'access_token', res);
 
-    res.status(202).json({
+    res.status(200).json({
       message: 'Usuario registrado correctamente',
       body: {
-        dataUser: user[0],
+        user: {
+          id: user[0].id,
+          name: user[0].name,
+          email: user[0].email,
+          phone: user[0].phone,
+          address: user[0].address,
+          avatar: user[0].avatar,
+          city: user[0].city,
+        },
+        carts: [],
+        orders: [],
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
     console.log(err);
   }
 };
@@ -69,14 +87,18 @@ export const login = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'El correo no está registrado',
+        error: {
+          email: 'El correo no está registrado',
+        },
       });
     }
 
     const isMatch = await compare(password, loginUser[0].password);
     if (!isMatch) {
       return res.status(401).json({
-        message: 'Credenciales inválidas',
+        error: {
+          password: 'Credenciales inválidas',
+        },
       });
     }
 
@@ -85,16 +107,28 @@ export const login = async (req, res) => {
 
     createToken({ id: loginUser[0].id }, 'user', 'access_token', res);
 
-    res.status(202).json({
+    res.status(200).json({
       message: 'Se ha iniciado sesión correctamente',
       body: {
-        user: loginUser[0],
+        user: {
+          id: loginUser[0].id,
+          name: loginUser[0].name,
+          email: loginUser[0].email,
+          phone: loginUser[0].phone,
+          address: loginUser[0].address,
+          avatar: loginUser[0].avatar,
+          city: loginUser[0].city,
+        },
         carts,
         orders,
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
     console.log(err);
   }
 };
@@ -108,7 +142,9 @@ export const deleteAcount = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'Usuario no encontrado',
+        error: {
+          message: 'Usuario no encontrado',
+        },
       });
     }
 
@@ -116,7 +152,11 @@ export const deleteAcount = async (req, res) => {
       message: 'Usuario eliminado correctamente',
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
     console.log(err);
   }
 };
@@ -156,18 +196,34 @@ export const editAcount = async (req, res) => {
 
     if (rowCount === 0) {
       return res.status(404).json({
-        message: 'Usuario no encontrado',
+        error: {
+          message: 'Usuario no encontrado',
+        },
       });
     }
 
     res.status(200).json({
       message: 'Usuario editado correctamente',
       body: {
-        user: user[0],
+        user: {
+          id: user[0].id,
+          name: user[0].name,
+          email: user[0].email,
+          phone: user[0].phone,
+          address: user[0].address,
+          avatar: user[0].avatar,
+          city: user[0].city,
+        },
+        carts: [],
+        orders: [],
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
     console.log(err);
   }
 };
@@ -179,7 +235,11 @@ export const logOut = async (req, res) => {
       message: 'Cierre de sesión exitoso',
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
     console.log(err);
   }
 };
@@ -195,7 +255,9 @@ export const validateInfoToken = async (req, res) => {
 
     if (user.length === 0) {
       return res.status(404).json({
-        message: 'User not found',
+        error: {
+          message: 'Usuario no encontrado',
+        },
       });
     }
 
@@ -205,13 +267,25 @@ export const validateInfoToken = async (req, res) => {
     res.status(200).json({
       message: 'Usuario encontrado',
       body: {
-        user: user[0],
+        user: {
+          id: user[0].id,
+          name: user[0].name,
+          email: user[0].email,
+          phone: user[0].phone,
+          address: user[0].address,
+          avatar: user[0].avatar,
+          city: user[0].city,
+        },
         carts,
         orders,
       },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'error interno del servidor',
+      },
+    });
     console.log(err);
   }
 };

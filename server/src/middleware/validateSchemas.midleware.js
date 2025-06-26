@@ -13,13 +13,17 @@ export const validateSchema =
       next();
       
     } catch (err) {
-      console.log(err);
+      
+      const errorsObj = {}
+      
+      err.errors.forEach(error => {
+        errorsObj[error.path[0]] = error.message;
+      });
+      
+      console.log(errorsObj);
 
       res.status(400).json({
-        error: err.errors.map((error) => ({
-          field: error.path[0],
-          message: error.message,
-        })),
+        error: errorsObj,
         message: 'Error de validación',
       });
     }

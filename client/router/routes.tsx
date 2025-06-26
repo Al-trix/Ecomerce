@@ -1,10 +1,9 @@
 import { createBrowserRouter } from 'react-router-dom';
-import AuthLogin from '../src/auth/page/AuthLogin.tsx';
-import TypeAuth from '../src/auth/page/TypeAuth.tsx';
 import loaderProducts from '../src/products/page/lazy/loader.tsx';
 import Layaout from '../src/layaout/Layaout.tsx';
 import ProductsLazy from '../src/products/page/lazy/products.lazy.tsx';
-
+import ProtectedRoutes from '../src/layaout/components/ProtectedRoutes.tsx';
+import CreateAcount from '../src/auth/page/CreateAcount.tsx';
 
 const router = createBrowserRouter([
   {
@@ -22,41 +21,14 @@ const router = createBrowserRouter([
       },
       {
         path: 'auth',
-        element: <TypeAuth />,
+        element: <CreateAcount />,
+      },
+      {
+        element: <ProtectedRoutes />,
         children: [
           {
-            path: 'seller',
-            children: [
-              {
-                index: true,
-                element: <TypeAuth />,
-              },
-              {
-                path: 'register',
-                element: <div>Register seller</div>,
-              },
-              {
-                path: 'login',
-                element: <AuthLogin />,
-              },
-            ],
-          },
-          {
-            path: 'user',
-            children: [
-              {
-                index: true,
-                element: <TypeAuth />,
-              },
-              {
-                path: 'register',
-                element: <div>Register user</div>,
-              },
-              {
-                path: 'login',
-                element: <div>Login user</div>,
-              },
-            ],
+            path: 'protected',
+            element: <div>Protected Routes</div>,
           },
         ],
       },

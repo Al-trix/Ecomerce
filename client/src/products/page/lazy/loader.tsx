@@ -5,7 +5,6 @@ const loaderProducts = async () => {
   return await queryClient.ensureQueryData({
     queryKey: ['products'],
     queryFn: async () => {
-
       const { data } = await getProducts(15, 1);
       return data;
     },
