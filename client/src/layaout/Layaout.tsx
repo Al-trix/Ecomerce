@@ -1,16 +1,19 @@
 import Header from "./components/Header.tsx";
 import { Outlet } from 'react-router';
+import { useBlockAuthRoutes } from '../hooks/useBlockRoute.ts';
+const Layaout = () => {
+  useBlockAuthRoutes();
 
-const layaout = () => {
   return (
-    <div className='container mx-auto '>
-      <Header />
+    <>
+    <Header />
+    <div className="container mx-auto">
       <main>
         <Outlet />
       </main>
     </div>
-
+    </>
   );
 };
 
-export default layaout;
+export default Layaout;

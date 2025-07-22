@@ -14,6 +14,7 @@ export const getCart = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Carrito no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -30,7 +31,8 @@ export const getCart = async (req, res) => {
     console.log(error);
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error getting cart',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -50,7 +52,8 @@ export const createCart = async (req, res) => {
       return res.status(409).json({
         error: {
           message: 'El producto ya existe en el carrito',
-        },
+          typeError: 'DATE_DUPLICATE',
+          },
       });
     }
 
@@ -63,6 +66,7 @@ export const createCart = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Carrito no creado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -79,7 +83,8 @@ export const createCart = async (req, res) => {
     console.log(error);
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error creating cart',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -94,6 +99,7 @@ export const deleteCart = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Carrito no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -105,7 +111,8 @@ export const deleteCart = async (req, res) => {
     console.log(error);
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error deleting cart',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -125,6 +132,7 @@ export const updateCart = (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Carrito no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -139,7 +147,8 @@ export const updateCart = (req, res) => {
     console.log(error);
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error updating cart',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }

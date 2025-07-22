@@ -1,30 +1,55 @@
 import { Field } from '@ark-ui/react/field';
 import type { FieldError, UseFormRegisterReturn } from 'react-hook-form';
+import { CgDanger } from 'react-icons/cg';
 
 interface PropsInput {
   label: string;
+  placeholder: string;
   type: string;
   register: UseFormRegisterReturn;
   errorsBack?: string | undefined | null;
   errorsZod?: FieldError | undefined | null;
 }
 
-const Input = ({ label, type, register, errorsBack, errorsZod }: PropsInput) => {
+const Input = ({
+  label,
+  placeholder,
+  type,
+  register,
+  errorsBack,
+  errorsZod,
+}: PropsInput) => {
   return (
-    <Field.Root className="flex flex-col gap-2 " invalid={!!errorsBack || !!errorsZod}>
-      <Field.Label>{label}</Field.Label>
+    <Field.Root
+      className="flex flex-col max-w-xl transition-all duration-300"
+      invalid={!!errorsBack || !!errorsZod}
+    >
+      <Field.Label className="text-xs pl-1 text-gray-800 tracking-wider mb-1  font-medium ">
+        {label}
+      </Field.Label>
       <Field.Input
-        placeholder={label}
-        className="bg-gray-400 border-2 border-gray-900 rounded-1xl p-2"
+        placeholder={placeholder}
+        className={`border rounded-lg pl-3 hover:placeholder:text-cyan-800 ${
+          errorsBack || errorsZod
+            ? 'border-red-500 placeholder:text-red-500 hover:placeholder:text-red-700 hover:border-red-700 focus:border-red-700'
+            : 'border-gray-600'
+        } p-1 focus:border-cyan-600 focus:outline-none hover:border-cyan-600`}
         {...register}
         type={type}
       />
-      {errorsBack || errorsZod ? (
-        <Field.ErrorText className=" text-xs text-red-500">
-          {errorsBack || errorsZod?.message}
+      {errorsBack && (
+        <Field.ErrorText className=" flex items-center gap-1 text-xs pl-1 pt-1 text-red-500">
+          <CgDanger />
+
+          {errorsBack}
         </Field.ErrorText>
-      ) : (
-        <Field.HelperText>escribe tu nombre</Field.HelperText>
+      )}
+      {errorsZod && (
+        <Field.ErrorText className=" flex items-center gap-1 text-xs pl-1 pt-1 text-red-500">
+          <CgDanger />
+
+          {errorsZod?.message}
+        </Field.ErrorText>
       )}
     </Field.Root>
   );

@@ -14,6 +14,17 @@ export interface Auth {
   city: string | null;
 } 
 
+type AuthUserError = {
+  name: string | null;
+  email: string | null;
+  password: string | null;
+  address: string | null;
+  phone: string | null;
+  avatar: string | null;
+  city: string | null;
+  typeError: string | null;
+}
+
 export interface AuthSeller extends Auth {
   store_name: string | null;
   rating: number | null;
@@ -21,13 +32,14 @@ export interface AuthSeller extends Auth {
 
 
 export type PartialAuthUser = Partial<Auth>;
+export type PartialAuthUserError = Partial<AuthUserError>;
 
 export type PartialAuthSeller = Partial<AuthSeller>;
 export type AuthLogin = Pick<AuthUser, 'email' | 'password'> 
 export type AuthPartialLogin = Partial<AuthLogin>
 
 export type AuthUserResponse = {
-  user: AuthUser & {id: string} | null;
+  user: Auth & {id: string} | null;
   carts: CartResponse[] | [];
   orders: OrderResponse[] | [];
 } | null

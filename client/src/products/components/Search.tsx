@@ -1,60 +1,15 @@
-import { Combobox, createListCollection } from '@ark-ui/react/combobox';
-import { useState, useMemo } from 'react';
+import { CiSearch } from 'react-icons/ci';
 
-const items = ['React', 'Vue', 'Solid', 'Svelte', 'Angular'];
-
-export const Search = () => {
-  const [filteredItems, setFilteredItems] = useState(items);
-
-  const collection = useMemo(
-    () => createListCollection({ items: filteredItems }),
-    [filteredItems]
-  );
-
-  const handleInputChange = (details: Combobox.InputValueChangeDetails) => {
-    setFilteredItems(
-      items.filter((item) =>
-        item.toLowerCase().includes(details.inputValue.toLowerCase())
-      )
-    );
-  };
-
+const Search = () => {
   return (
-    <div className="max-w-sm mx-auto mt-10">
-      <Combobox.Root
-        collection={collection}
-        onInputValueChange={handleInputChange}
-      >
-        <Combobox.Label className="block mb-1 text-sm font-medium text-gray-700">
-          Selecciona un framework
-        </Combobox.Label>
-
-        <Combobox.Control className="flex border border-gray-300 rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-blue-500">
-          <Combobox.Input
-            className="flex-1 px-3 py-2 outline-none"
-            placeholder="Buscar..."
-          />
-          <Combobox.Trigger className="px-2 bg-gray-100 text-gray-700">
-            ▼
-          </Combobox.Trigger>
-        </Combobox.Control>
-
-        <Combobox.Positioner>
-          <Combobox.Content className="border border-gray-200 mt-1 rounded-md shadow-md bg-white max-h-60 overflow-y-auto">
-            {collection.items.map((item) => (
-              <Combobox.Item key={item} item={item}>
-                <Combobox.ItemText className="px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  {item}
-                </Combobox.ItemText>
-                <Combobox.ItemIndicator className="px-2 text-green-500">
-                  ✓
-                </Combobox.ItemIndicator>
-              </Combobox.Item>
-            ))}
-          </Combobox.Content>
-        </Combobox.Positioner>
-      </Combobox.Root>
-    </div>
+    <form action="" className="flex gap-1 relative">
+      <CiSearch className='absolute left-3 top-1/2 -translate-y-1/2'/>
+      <input
+        type="text"
+        className=" rounded-4xl py-2 pl-9 text-sm pr-40 border border-gray-300 shadow-lg shadow-black/20 hover:border-gray-400 focus:border-gray-300/10"
+      />
+      <button type="submit" className=' absolute right-1.5 top-1/2 -translate-y-1/2 bg-gray-900 text-white rounded-4xl px-4 py-1.5 text-xs cursor-pointer'>Buscar</button>
+    </form>
   );
 };
 

@@ -5,11 +5,6 @@ export type MessageError = {
   message: string;
 };
 
-//! Types para respuestas
-export type DataResponseProducts = {
-  message: string;
-  body: ProductsResponse;
-};
 
 //! Types para el carrito
 export type Cart = {
@@ -77,8 +72,8 @@ export type Product = {
 } | null;
 
 export type ProductsResponse = {
-  product: Product | null;
-  seller: AuthSeller | null;
+  product: Product ;
+  seller: AuthSeller;
   reviews: Review[] | [];
 }[];
 
@@ -92,3 +87,17 @@ export type Review = {
   comment: string | null;
 };
 export type PartialReview = Partial<Review>;
+
+//! Types para respuestas
+export type DataResponseProducts = {
+  message: string;
+  body: {
+    limit: number;
+    products: ProductsResponse;
+    hasPrev: boolean;
+    hasNext: boolean;
+    page: number;
+    totalPages: number;
+    totalProducts: number;
+  };
+};

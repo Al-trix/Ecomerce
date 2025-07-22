@@ -38,12 +38,14 @@ export const checkAuthorizade = (typeUser) => (req, res, next) => {
       return;
     }
     return res.status(403).json({
-      message: 'Token invalido'
+      message: 'Token invalido',
+      typeError: 'TOKEN_INVALID',
     });
   } catch (err) {
     console.error('Error verifying token:', err);
     return res.status(403).json({
-      message: 'Invalid token',
+      message: 'Error verifying token',
+      typeError: 'TOKEN_INVALID',
     });
   }
 };
@@ -90,7 +92,7 @@ export const checkAuthorizadeSocket = (io) => {
       return next(new Error('Usuario no encontrado'));
     } catch (err) {
       console.log('Error al verificar token:', err.message); // ✅ Verifica el error que se genera
-      return next(new Error('Token inválido'));
+      return next(new Error('Token inválido', { typeError: 'TOKEN_INVALID' }));
     }
   });
 };

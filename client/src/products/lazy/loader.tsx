@@ -1,5 +1,5 @@
-import { getProducts } from '../../api/actions.ts';
-import { queryClient } from '../../../lib/queryClient';
+import { getProducts } from '../api/actions.ts';
+import { queryClient } from '../../lib/queryClient.ts';
 
 const loaderProducts = async () => {
   return await queryClient.ensureQueryData({

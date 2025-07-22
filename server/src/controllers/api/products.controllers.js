@@ -3,20 +3,45 @@ import generateUID from '../../libs/generateUID.js';
 import { searchInfoProducts } from '../../libs/searchInfo.js';
 
 export const getProducts = async (req, res) => {
+  const queryParamsInput = req.query;
+
   try {
-    const products = await searchInfoProducts(req.query);
+    const result = await searchInfoProducts(null, queryParamsInput);
+
+    if (result.typeError === 'DATE_NOT_FOUND') {
+      return res.status(404).json({
+        error: {
+          message: 'No se encontraron productos',
+          typeError: 'DATE_NOT_FOUND',
+        },
+      });
+    }
+
+    if (result.typeError === 'DATABASE_ERROR') {
+      return res.status(500).json({
+        error: {
+          message: 'Error en la base de datos',
+          typeError: 'DATABASE_ERROR',
+        },
+      });
+    }
+
     res.status(200).json({
       message: 'Lista de productos',
       body: {
-          products,
-          totalProducts: products.length,
-          limit: Number(req.query.limit) || 10,
-          page: Number(req.query.page) || 1,
-        },
+        products: result.data,
+        totalProducts: result.pagination.total,
+        ...result.pagination,
+      },
     });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: err.message });
+    console.error('Error en getProducts:', err);
+    res.status(500).json({
+      error: {
+        message: 'Error interno del servidor',
+        typeError: 'SERVER_ERROR',
+      },
+    });
   }
 };
 
@@ -31,6 +56,7 @@ export const getProduct = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Producto no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -42,7 +68,8 @@ export const getProduct = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: {
-        message: error.message,
+        message: 'Error fetching product',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -84,7 +111,8 @@ export const createProduct = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: err.message,
+        message: 'Error creating product',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -133,6 +161,7 @@ export const updateProduct = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Producto no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -145,7 +174,8 @@ export const updateProduct = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: err.message,
+        message: 'Error updating product',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -163,6 +193,7 @@ export const deleteProduct = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Producto no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -171,9 +202,11 @@ export const deleteProduct = async (req, res) => {
       message: 'Producto eliminado correctamente',
     });
   } catch (err) {
+    
     res.status(500).json({
       error: {
-        message: err.message,
+        message: 'Error deleting product',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }

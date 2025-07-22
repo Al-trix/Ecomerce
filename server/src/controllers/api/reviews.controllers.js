@@ -14,6 +14,7 @@ export const createReview = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Usuario no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -27,6 +28,7 @@ export const createReview = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Reseña no creada',
+          typeError: 'DATE_NOT_CREATED',
         },
       });
     }
@@ -39,7 +41,8 @@ export const createReview = async (req, res) => {
     console.log(err);
     return res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error creating review',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -58,6 +61,7 @@ export const updateReview = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Reseña no encontrada',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -69,7 +73,8 @@ export const updateReview = async (req, res) => {
     console.log(err);
     return res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error updating review',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -87,6 +92,7 @@ export const deleteReview = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Reseña no encontrada',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -98,7 +104,8 @@ export const deleteReview = async (req, res) => {
     console.log(err);
     return res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error deleting review',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }

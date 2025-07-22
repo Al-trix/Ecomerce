@@ -21,6 +21,7 @@ export const register = async (req, res) => {
       return res.status(400).json({
         error: {
           phone: 'El teléfono ya está registrado',
+          typeError: 'DATE_DUPLICATE',
         },
       });
     }
@@ -29,6 +30,7 @@ export const register = async (req, res) => {
       return res.status(400).json({
         error: {
           email: 'El correo ya está registrado',
+          typeError: 'DATE_DUPLICATE',
         },
       });
     }
@@ -70,7 +72,8 @@ export const register = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error creating user',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
     console.log(err);
@@ -89,6 +92,7 @@ export const login = async (req, res) => {
       return res.status(404).json({
         error: {
           email: 'El correo no está registrado',
+          typeError: 'USER_NOT_FOUND',
         },
       });
     }
@@ -98,6 +102,7 @@ export const login = async (req, res) => {
       return res.status(401).json({
         error: {
           password: 'Credenciales inválidas',
+          typeError: 'USER_NOT_FOUND',
         },
       });
     }
@@ -126,7 +131,8 @@ export const login = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error logging in',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
     console.log(err);
@@ -144,6 +150,7 @@ export const deleteAcount = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Usuario no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -154,7 +161,8 @@ export const deleteAcount = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error deleting user',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
     console.log(err);
@@ -198,7 +206,8 @@ export const editAcount = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Usuario no encontrado',
-        },
+          typeError: 'DATE_NOT_FOUND',
+          },
       });
     }
 
@@ -221,7 +230,8 @@ export const editAcount = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error updating user',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
     console.log(err);
@@ -237,7 +247,8 @@ export const logOut = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error logging out',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
     console.log(err);
@@ -257,6 +268,7 @@ export const validateInfoToken = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Usuario no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -283,7 +295,8 @@ export const validateInfoToken = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error validating token',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
     console.log(err);

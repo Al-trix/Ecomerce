@@ -17,7 +17,7 @@ export const getOrders = async (req, res) => {
     res.status(500).json({
       error: {
         message: 'Error fetching orders',
-        error,
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -37,6 +37,7 @@ export const createOrder = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'No tienes productos en el carrito',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -59,6 +60,7 @@ export const createOrder = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'la orden no fue creada',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -110,7 +112,7 @@ export const createOrder = async (req, res) => {
     res.status(500).json({
       error: {
         message: 'Error creating order',
-        error,
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }
@@ -127,6 +129,7 @@ export const deleteOrder = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'No tienes ordenes registradas',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -141,12 +144,10 @@ export const deleteOrder = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({
-      data: {
         error: {
           message: 'Error deleting order',
-          error,
+          typeError: 'DATE_NOT_FOUND',
         },
-      },
     });
   }
 };
@@ -163,6 +164,7 @@ export const editOrder = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'No tienes ordenes registradas',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -176,6 +178,7 @@ export const editOrder = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'la orden no fue editada',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -189,7 +192,7 @@ export const editOrder = async (req, res) => {
     res.status(500).json({
       error: {
         message: 'Error editing order',
-        error,
+        typeError: 'DATE_NOT_FOUND',
       },
     });
   }

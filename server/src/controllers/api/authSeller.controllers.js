@@ -30,6 +30,7 @@ export const registerSeller = async (req, res) => {
       return res.status(400).json({
         error: {
           store_name: 'El nombre de la tienda ya está registrado',
+          typeError: 'DATE_DUPLICATE',
         },
       });
     }
@@ -38,6 +39,7 @@ export const registerSeller = async (req, res) => {
       return res.status(400).json({
         error: {
           phone: 'El teléfono ya está registrado',
+          typeError: 'DATE_DUPLICATE',
         },
       });
     }
@@ -46,6 +48,7 @@ export const registerSeller = async (req, res) => {
       return res.status(400).json({
         error: {
           email: 'El correo ya está registrado',
+          typeError: 'DATE_DUPLICATE',
         },
       });
     }
@@ -84,7 +87,8 @@ export const registerSeller = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error creating seller',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
     console.log(err);
@@ -103,6 +107,7 @@ export const loginSeller = async (req, res) => {
       return res.status(404).json({
         error: {
           email: 'El correo no está registrado',
+          typeError: 'USER_NOT_FOUND',
         },
       });
     }
@@ -113,6 +118,7 @@ export const loginSeller = async (req, res) => {
       return res.status(401).json({
         error: {
           password: 'La contraseña es incorrecta',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -138,7 +144,8 @@ export const loginSeller = async (req, res) => {
   } catch (err) {
     res.status(500).json({
       error: {
-        message: 'error interno del servidor',
+        message: 'Error logging in',
+        typeError: 'DATE_NOT_FOUND',
       },
     });
     console.log(err);
@@ -156,6 +163,7 @@ export const deleteSeller = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Usuario no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -168,7 +176,8 @@ export const deleteSeller = async (req, res) => {
   } catch (err) {
     res.status(500).json({
         error: {
-          message: 'error interno del servidor',
+          message: 'Error deleting seller',
+          typeError: 'DATE_NOT_FOUND',
         },
     });
     console.log(err);
@@ -188,7 +197,8 @@ export const logOut = async (req, res) => {
     res.status(500).json({
       data: {
         error: {
-          message: 'error interno del servidor',
+          message: 'Error logging out',
+          typeError: 'DATE_NOT_FOUND',
         },
       },
     });
@@ -237,7 +247,12 @@ export const updatedSeller = async (req, res) => {
         },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'Error updating seller',
+        typeError: 'DATE_NOT_FOUND',
+      },
+    });
     console.log(err);
   }
 };
@@ -255,6 +270,7 @@ export const validateInfoTokenSeller = async (req, res) => {
       return res.status(404).json({
         error: {
           message: 'Usuario no encontrado',
+          typeError: 'DATE_NOT_FOUND',
         },
       });
     }
@@ -276,7 +292,12 @@ export const validateInfoTokenSeller = async (req, res) => {
         },
     });
   } catch (err) {
-    res.status(500).json({ error: err });
+    res.status(500).json({
+      error: {
+        message: 'Error validating token',
+        typeError: 'DATE_NOT_FOUND',
+      },
+    });
     console.log(err);
   }
 };
