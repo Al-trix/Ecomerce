@@ -122,7 +122,7 @@ const AuthLoginUser = () => {
               mutationRegister.isPending
                 ? 'cursor-not-allowed pointer-events-none'
                 : 'cursor-pointer'
-            } bg-linear-to-r from-cyan-400  to-cyan-700 tracking-widest text-white  py-3 cursor-pointer rounded-lg transition-all duration-300 hover:to-cyan-400 hover:from-cyan-700 hover:scale-105 hover:-translate-y-1 font-medium text-lg `}
+            } bg-linear-to-r from-cyan-400  to-cyan-700 tracking-widest text-white  py-2 cursor-pointer rounded-lg transition-all duration-300 hover:to-cyan-400 hover:from-cyan-700 hover:scale-105 hover:-translate-y-1 font-medium text-sm `}
           >
             Enviar
           </button>

@@ -1,10 +1,16 @@
 import Link from './Link.tsx';
-import { FaCartShopping } from 'react-icons/fa6';
-import { useUserExistStore } from '../../store/StepStates.tsx';
-import '../../styles/style.css';
+import { IoCartOutline } from 'react-icons/io5';
 import { useLocation } from 'react-router';
+import { Avatar } from '@ark-ui/react/avatar';
+import { FiSettings } from "react-icons/fi";
+
+import { Menu } from '@ark-ui/react/menu';
+
+import useInfoUser from '../../hooks/useInfoUser.ts';
+import '../../styles/style.css';
+
 const Header = () => {
-  const userExist = useUserExistStore((state) => state.userExist);
+  const { infoUser } = useInfoUser();
   const { pathname } = useLocation();
   return (
     <>
@@ -24,17 +30,59 @@ const Header = () => {
             </li>
           </div>
           <div className="flex gap-3  items-center justify-end">
-            {userExist ? (
-              <li>
-                <Link to="/cart" content="Carrito">
-                  <FaCartShopping size={26} />
-                </Link>
-              </li>
+            {infoUser ? (
+              <>
+                <li>
+                  <Link to="/cart" content="Carrito">
+                    <IoCartOutline size={20} />
+                  </Link>
+                </li>
+                <li>
+                  <Menu.Root>
+                    <Menu.Trigger className="w-7 cursor-pointer h-7 ml-2  outline-none shadow-sm shadow-black  p-px rounded-full hover:shadow-black/70  transition-shadow duration-200 active:scale-95">
+                      <Avatar.Root>
+                        <Avatar.Fallback className="text-gray-600 text-xs flex justify-center items-center w-full h-full">
+                          {infoUser?.user?.name?.slice(0, 2).toUpperCase()}
+                        </Avatar.Fallback>
+                        <Avatar.Image
+                          className="object-cover rounded-full"
+                          src="https://.pravatar.cc/300"
+                          alt="avatar"
+                        />
+                      </Avatar.Root>
+                    </Menu.Trigger>
+
+                    <Menu.Positioner>
+                      <Menu.Content className="bg-white/70 backdrop-blur-lg outline-none shadow-lg  rounded-sm animate-in zoom-in-50 duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-50 text-sm shadow-lg shadow-black/30">
+                        <Menu.Item
+                          value="options"
+                          className=" pointer-events-none border-b-[1px] border-gray-300 px-4 py-2 fñ"
+                        >
+                          <FiSettings />
+
+                          Opciones
+                        </Menu.Item>
+                        <Menu.Item
+                          value="options"
+                          className=" rounded cursor-pointer  transition-transform duration-200 ease-in hover:translate-x-1 transform px-4 py-2"
+                        >
+                          Opciones
+                        </Menu.Item>
+                      </Menu.Content>
+                    </Menu.Positioner>
+                  </Menu.Root>
+                </li>
+              </>
             ) : (
+              <></>
+            )}
+            {!infoUser ? (
               <li className="flex gap-2">
                 <Link to="/auth/login" content="Iniciar sesion" />
                 <Link to="/auth/register" content="Registrarse" />
               </li>
+            ) : (
+              <></>
             )}
           </div>
         </ul>

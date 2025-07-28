@@ -1,5 +1,5 @@
 import Search from '../components/Search.tsx';
-import useProducts from '../../hooks/useProducts.tsx';
+import useProducts from '../../hooks/useProducts.ts';
 import ProductsList from './ProductsList.tsx';
 import Category from './Category.tsx';
 
@@ -14,7 +14,7 @@ const Products = () => {
         </h3>
         <Search />
       </div>
-      <article className="grid grid-cols-[0.5fr_2fr] gap-4 mt-12 px-5">
+      <article className="grid grid-cols-[0.5fr_2fr] relative gap-4 mt-12 px-5">
         <div className="flex flex-col gap-4 ">
          <Category/>
         </div>

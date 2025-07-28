@@ -4,6 +4,7 @@ import Layaout from '../src/layaout/Layaout.tsx';
 import ProtectedRoutes from '../src/layaout/components/ProtectedRoutes.tsx';
 import AuthRouteDecider from './hooks/ProtectedRoutes';
 import Home from '../src/layaout/Home.tsx';
+import ProductsCategory from '../src/products/pages/ProductsCategory.tsx';
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
         index: true,
         loader: loaderProducts,
         element: <Home />,
+      },
+      {
+        path: 'categoria/:category',
+        element: <ProductsCategory />,
       },
       {
         path: 'auth',

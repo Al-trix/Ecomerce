@@ -1,9 +1,9 @@
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getProducts } from "../products/api/actions";
+import { getProducts } from "../products/api/actions.ts";
 import type {
   DataResponseProducts,
   MessageError,
-} from "../types/shopServices.d.ts";
+} from "../types/shopServices";
 
 const useProducts = () => {
   const { data: response, error, status } = useSuspenseQuery<

@@ -1,4 +1,3 @@
-
 import { TreeView, createTreeCollection } from '@ark-ui/react/tree-view';
 import TreeNode from './TreeNode';
 
@@ -9,7 +8,6 @@ interface Node {
 }
 
 const Category = () => {
-
   const collection = createTreeCollection<Node>({
     nodeToValue: (node) => node.id,
     nodeToString: (node) => node.name,
@@ -22,52 +20,86 @@ const Category = () => {
           name: 'Categorías',
           children: [
             {
-              id: 'categoria-electronica',
+              id: '/category/electronicos',
               name: 'Electrónicos',
-              children: [
-                { id: 'smartphones', name: 'Smartphones' },
-                { id: 'laptops', name: 'Laptops' },
-                { id: 'tablets', name: 'Tablets' },
-                { id: 'accesorios', name: 'Accesorios' },
-              ],
             },
             {
-              id: 'categoria-ropa',
+              id: '/category/ropa',
               name: 'Ropa',
-              children: [
-                { id: 'hombres', name: 'Hombres' },
-                { id: 'mujeres', name: 'Mujeres' },
-                { id: 'niños', name: 'Niños' },
-                { id: 'zapatos', name: 'Zapatos' },
-              ],
             },
             {
-              id: 'categoria-hogar',
-              name: 'Hogar y Jardín',
-              children: [
-                { id: 'muebles', name: 'Muebles' },
-                { id: 'decoracion', name: 'Decoración' },
-                { id: 'jardin', name: 'Jardín' },
-                { id: 'cocina', name: 'Cocina' },
-              ],
+              id: '/category/hogar',
+              name: 'Hogar',
+            },
+            {
+              id: '/category/jardin',
+              name: 'Jardín',
+            },
+            {
+              id: '/category/accesorios',
+              name: 'Accesorios',
+            },
+            {
+              id: '/category/salud',
+              name: 'Salud',
+            },
+            {
+              id: '/category/belleza',
+              name: 'Belleza',
+            },
+            {
+              id: '/category/deportes',
+              name: 'Deportes',
+            },
+            {
+              id: '/category/airelibre',
+              name: 'Aire Libre',
+            },
+            {
+              id: '/category/libros',
+              name: 'Libros',
+            },
+            {
+              id: '/category/entretenimiento',
+              name: 'Entretenimiento',
+            },
+            {
+              id: '/category/alimentos',
+              name: 'Alimentos',
+            },
+            {
+              id: '/category/bebidas',
+              name: 'Bebidas',
+            },
+            {
+              id: '/category/juguetes',
+              name: 'Juguetes',
+            },
+            {
+              id: '/category/niños',
+              name: 'Niños',
+            },
+            {
+              id: '/category/mascotas',
+              name: 'Mascotas',
             },
           ],
         },
         {
-          id: 'best-sellers',
-          name: 'Best Sellers',
+          id: 'mejores-vendedores',
+          name: 'Mejores vendedores',
           children: [
-            { id: 'bestseller-iphone', name: 'iPhone 15 Pro' },
-            { id: 'bestseller-airpods', name: 'AirPods Pro' },
-            { id: 'bestseller-macbook', name: 'MacBook Air M3' },
-            { id: 'bestseller-watch', name: 'Apple Watch Series 9' },
-            { id: 'bestseller-jeans', name: 'Jeans Premium' },
-            { id: 'bestseller-sneakers', name: 'Sneakers Deportivos' },
+            { id: 'mejores-vendedores-iphone', name: 'iPhone 15 Pro' },
+            { id: 'mejores-vendedores-airpods', name: 'AirPods Pro' },
+            { id: 'mejores-vendedores-macbook', name: 'MacBook Air M3' },
+            { id: 'mejores-vendedores-watch', name: 'Apple Watch Series 9' },
+            { id: 'mejores-vendedores-jeans', name: 'Jeans Premium' },
+            { id: 'mejores-vendedores-sneakers', name: 'Sneakers Deportivos' },
           ],
         },
         {
           id: 'descuentos',
-          name: 'En Descuento',
+          name: 'En Descuento!!!',
           children: [
             { id: 'descuento-samsung', name: 'Samsung Galaxy S24 - 20% OFF' },
             { id: 'descuento-laptop', name: 'Laptop Gaming - 15% OFF' },
@@ -83,17 +115,18 @@ const Category = () => {
     },
   });
 
-   return (
-     <TreeView.Root collection={collection}>
-       <TreeView.Label>Catálogo de Productos</TreeView.Label>
-       <TreeView.Tree>
-         {collection.rootNode.children?.map((node, index) => (
-           <TreeNode key={node.id} node={node} indexPath={[index]} />
-         ))}
-       </TreeView.Tree>
-     </TreeView.Root>
-   );
-}
+  return (
+    <TreeView.Root collection={collection} className="">
+      <TreeView.Label className="font-bold  text-normal text-shadow-xs text-shadow-black/30  tracking-wider">
+        Catalogo de categorias
+      </TreeView.Label>
+      <TreeView.Tree className="flex flex-col gap-4 mt-6">
+        {collection.rootNode.children?.map((node, index) => (
+          <TreeNode key={node.id} node={node} indexPath={[index]} />
+        ))}
+      </TreeView.Tree>
+    </TreeView.Root>
+  );
+};
 
-
-export default Category
+export default Category;
