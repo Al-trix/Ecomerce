@@ -1,23 +1,23 @@
 import {
   loginSchema,
   type Login,
-} from '../schemas/auth.schema.ts';
+} from '../../schemas/auth.schema.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import Input from './Input';
-import { loginUser } from '../users/api/actions.ts';
-import { queryClient } from '../../lib/queryClient.ts';
+import Input from '../../components/Input';
+import { loginUser } from '../api/actions.ts';
+import { queryClient } from '../../../lib/queryClient.ts';
 import { ClockLoader } from 'react-spinners';
 import type {
   responseAuthUser,
   AuthPartialLogin,
   PartialAuthUserError,
 } from 'src/types/auth';
+import Poup from '../../components/Poup';
 import type { AxiosError } from 'axios';
-import PoupForLogin from './PoupForLogin';
 import { useState, useEffect } from 'react';
-import { useStepCountStore, useUserExistStore } from '../../store/StepStates';
+import { useStepCountStore, useUserExistStore } from '../../../store/StepStates.tsx';
 import { Link } from 'react-router';
 
 interface ErrorAuth {
@@ -83,7 +83,7 @@ const AuthLoginUser = () => {
         <h4 className="text-2xl font-bold">Enviando...</h4>
         <ClockLoader loading size={100} speedMultiplier={1} className="z-50" />
       </div>
-      <PoupForLogin
+      <Poup
         isOpen={isOpen}
         isLogin
         onClose={() => {

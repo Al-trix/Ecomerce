@@ -9,6 +9,7 @@ interface PropsInput {
   register: UseFormRegisterReturn;
   errorsBack?: string | undefined | null;
   errorsZod?: FieldError | undefined | null;
+  isSeller?: boolean;
 }
 
 const Input = ({
@@ -18,6 +19,7 @@ const Input = ({
   register,
   errorsBack,
   errorsZod,
+  isSeller = false,
 }: PropsInput) => {
   return (
     <Field.Root
@@ -29,11 +31,15 @@ const Input = ({
       </Field.Label>
       <Field.Input
         placeholder={placeholder}
-        className={`border rounded-lg pl-3 hover:placeholder:text-cyan-800 ${
+        className={`border rounded-lg pl-3  ${
           errorsBack || errorsZod
             ? 'border-red-500 placeholder:text-red-500 hover:placeholder:text-red-700 hover:border-red-700 focus:border-red-700'
             : 'border-gray-600'
-        } p-1 focus:border-cyan-600 focus:outline-none hover:border-cyan-600`}
+        } p-1 ${
+          isSeller
+            ? 'focus:border-emerald-600 hover:border-emerald-600 hover:placeholder:text-emerald-800'
+            : 'focus:border-cyan-600 hover:border-cyan-600 hover:placeholder:text-cyan-800'
+        } focus:outline-none `}
         {...register}
         type={type}
       />

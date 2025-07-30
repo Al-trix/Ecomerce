@@ -29,12 +29,29 @@ export const productCreateSchema = z.object({
     })
     .min(0, 'Debes tener mas de un articulo en stock')
     .max(99999999, 'El stock es muy alto'),
-  category: z
-    .string({
+  category: z.enum(
+    [
+      'Electronica',
+      'Ropa',
+      'Accesorios',
+      'Hogar',
+      'Jardin',
+      'Salud',
+      'Belleza',
+      'Deportes',
+      'AireLibre',
+      'Libros',
+      'Entretenimiento',
+      'Alimentos',
+      'Bebidas',
+      'Juguetes',
+      'Niños',
+      'Mascotas',
+    ],
+    {
       required_error: 'Categoría requerida',
-    })
-    .min(3, 'La categorai es muy corta')
-    .max(10, 'La categoría es muy larga'),
+    }
+  ),
   discountPorcentage: z
     .number({
       required_error: 'Descuento requerido',

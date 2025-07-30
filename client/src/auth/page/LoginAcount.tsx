@@ -3,7 +3,7 @@ import ContentStep from '../components/ContentStep.tsx';
 import TypeAuth from '../components/TypeAuth.tsx';
 import { useStepCountStore } from '../../store/StepStates.tsx';
 import WelomeUser from '../components/WelcomeUser.tsx';
-import AuthLoginUser from '../components/AuthLoginUser.tsx';
+import AuthLoginUser from '../users/components/AuthLoginUser.tsx';
 
 const LoginACount = () => {
   const stepCount = useStepCountStore((state) => state.stepCount);

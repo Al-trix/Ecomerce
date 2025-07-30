@@ -2,10 +2,12 @@ import { useLocation } from 'react-router';
 
 const ProductsCategory = () => {
   const { pathname } = useLocation();
+  const category = pathname.split('/').pop();  
+
 
   return (
     <div>
-      {pathname === '/categoria/electronicos' && <h1>Electronica</h1>}
+     {category}
     </div>
   );
 };

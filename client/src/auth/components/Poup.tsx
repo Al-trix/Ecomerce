@@ -13,7 +13,7 @@ interface Props {
   isLogin?: boolean;
 }
 
-const PoupForLogin = ({ isOpen, onClose, isLogin }: Props) => {
+const Poup = ({ isOpen, onClose, isLogin }: Props) => {
   return (
     <Dialog.Root
       open={isOpen}
@@ -64,4 +64,4 @@ const PoupForLogin = ({ isOpen, onClose, isLogin }: Props) => {
   );
 };
 
-export default PoupForLogin;
+export default Poup;

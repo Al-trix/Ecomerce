@@ -9,6 +9,7 @@ import { pool } from '../db.js';
 //? Si el token no existe se le manda un error al cliente
 export const checkAuthorizade = (typeUser) => (req, res, next) => {
   const { access_token } = req.cookies;
+  
   try {
     if (typeUser === 'user' && !req.user && !access_token) {
       return res.status(401).json({
@@ -30,10 +31,14 @@ export const checkAuthorizade = (typeUser) => (req, res, next) => {
       return;
     }
 
+    console.log(access_token.role, typeUser);
+
     if (access_token.role === 'seller' && typeUser === 'seller') {
       const token = access_token?.data;
       const decoded = jwt.verify(token, TOKEN_SECRET);
       req.userSeller = decoded;
+      console.log(req.userSeller);
+      console.log(decoded);
       next();
       return;
     }

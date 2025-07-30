@@ -1,24 +1,25 @@
 import {
-  userRegisterSchema,
-  type UserRegister,
-} from '../schemas/auth.schema.ts';
+  sellerRegisterSchema,
+  type SellerRegister,
+} from '../../schemas/auth.schema.ts';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import Input from './Input';
-import { registerUser } from '../users/api/actions.ts';
-import { queryClient } from '../../lib/queryClient.ts';
+import Input from '../../components/Input.tsx';
+import { registerSeller } from '../api/actions.ts';
+import { queryClient } from '../../../lib/queryClient.ts';
 import { ClockLoader } from 'react-spinners';
 import type {
-  responseAuthUser,
-  PartialAuthUser,
+  responseAuthSeller,
+  PartialAuthSeller,
   PartialAuthUserError,
 } from 'src/types/auth';
 import type { AxiosError } from 'axios';
-import PoupForLogin from './PoupForLogin';
+import Poup from '../../components/Poup.tsx';
 import { useState, useEffect } from 'react';
-import { useStepCountStore, useUserExistStore } from '../../store/StepStates';
+import { useStepCountStore, useUserExistStore, useTypeUserStore } from '../../../store/StepStates.tsx';
 import { Link } from 'react-router';
+
 interface ErrorAuth {
   error: PartialAuthUserError;
   message: string;
@@ -29,16 +30,17 @@ const AuthRegisterUser = () => {
 
   const setStepCountStore = useStepCountStore((state) => state.setStepCount);
   const setUserExistStore = useUserExistStore((state) => state.setUserExist);
+  const typeUser = useTypeUserStore((state) => state.typeUser);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<UserRegister>({
-    resolver: zodResolver(userRegisterSchema),
+  } = useForm<SellerRegister>({
+    resolver: zodResolver(sellerRegisterSchema),
   });
 
-  const onSumbit: SubmitHandler<UserRegister> = (data) => {
+  const onSumbit: SubmitHandler<SellerRegister> = (data) => {
     const dataSend = {
       name: data.name,
       email: data.email,
@@ -47,25 +49,27 @@ const AuthRegisterUser = () => {
       city: data.city,
       phone: data.phone,
       address: data.address,
+      store_name: data.store_name,
+
     };
 
     mutationRegister.mutate(dataSend);
   };
   const mutationRegister = useMutation<
-    responseAuthUser,
+    responseAuthSeller,
     AxiosError<ErrorAuth>,
-    PartialAuthUser
+    PartialAuthSeller
   >({
-    mutationKey: ['user'],
-    mutationFn: registerUser,
+    mutationKey: ['seller'],
+    mutationFn: registerSeller,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user'] });
+      queryClient.invalidateQueries({ queryKey: ['seller'] });
       setStepCountStore();
       setUserExistStore(true);
     },
   });
 
-  const errorsBackend: PartialAuthUser | undefined =
+  const errorsBackend: PartialAuthSeller | undefined =
     mutationRegister.error?.response?.data.error;
 
   const TYPE_DUPLICATE: string | null | undefined =
@@ -87,7 +91,7 @@ const AuthRegisterUser = () => {
         <h4 className="text-2xl font-bold">Enviando...</h4>
         <ClockLoader loading size={100} speedMultiplier={1} className="z-50" />
       </div>
-      <PoupForLogin
+      <Poup
         isOpen={isOpen}
         onClose={() => {
           console.log('cerrado');
@@ -107,6 +111,7 @@ const AuthRegisterUser = () => {
             register={register('name')}
             errorsBack={errorsBackend?.name}
             errorsZod={errors.name}
+            isSeller={typeUser !== 'user'}
           />
           <Input
             label="Correo"
@@ -115,6 +120,7 @@ const AuthRegisterUser = () => {
             register={register('email')}
             errorsBack={errorsBackend?.email}
             errorsZod={errors.email}
+            isSeller={typeUser !== 'user'}
           />
           <Input
             label="Ciudad"
@@ -123,6 +129,7 @@ const AuthRegisterUser = () => {
             register={register('city')}
             errorsBack={errorsBackend?.city}
             errorsZod={errors.city}
+            isSeller={typeUser !== 'user'}
           />
 
           <Input
@@ -132,6 +139,7 @@ const AuthRegisterUser = () => {
             register={register('avatar')}
             errorsBack={errorsBackend?.avatar}
             errorsZod={errors.avatar}
+            isSeller={typeUser !== 'user'}
           />
           <Input
             label="Telefono"
@@ -150,12 +158,21 @@ const AuthRegisterUser = () => {
             errorsZod={errors.address}
           />
           <Input
+            label="Nombre de la tienda"
+            placeholder="Escribe el nombre de al tienda"
+            type="text"
+            register={register('store_name')}
+            errorsBack={errorsBackend?.store_name}
+            errorsZod={errors.store_name}
+          />
+          <Input
             label="Contraseña"
             placeholder="Escribe tu contraseña"
             type="password"
             register={register('password')}
             errorsBack={errorsBackend?.password}
             errorsZod={errors.password}
+            isSeller={typeUser !== 'user'}
           />
           <Input
             label="Confirmar Contraseña"
@@ -163,6 +180,7 @@ const AuthRegisterUser = () => {
             type="password"
             register={register('confirmPassword')}
             errorsZod={errors.confirmPassword}
+            isSeller={typeUser !== 'user'}
           />
         </div>
         <div className="flex pt-7 justify-between items-center">

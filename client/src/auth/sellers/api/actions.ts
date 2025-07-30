@@ -1,6 +1,7 @@
-import axios from '../../api/instance.ts';
-import { enums } from '../../types/funtions';
-import type { FuntionActionsApi } from '../../types/funtions';
+import axios from '../../../api/instance';
+import  { enums } from '../../../types/constantes';
+import type { FuntionActionsApi } from '../../../types/funtions';
+
 
 export const registerSeller: FuntionActionsApi['sellers']['register'] = (
   dataSeller

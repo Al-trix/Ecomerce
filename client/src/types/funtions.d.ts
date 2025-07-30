@@ -1,11 +1,10 @@
 import type { AxiosResponse } from '../../api/instance.ts';
 import type {
-  Auth,
   AuthLogin,
   PartialAuthUser,
-  AuthSeller,
   PartialAuthSeller,
-} from '../../types/auth';
+} from './auth';
+
 import type {
   Cart,
   Order,
@@ -15,12 +14,12 @@ import type {
   PartialReview,
   Products,
   Review,
-} from '../../types/shopServices';
+} from './shopServices';
 
 //! Types para las funciones de las rutas de la API
 export type FuntionActionsApi = {
   users: {
-    register: (dataUser: Auth) => Promise<AxiosResponse>;
+    register: (dataUser: PartialAuthUser) => Promise<AxiosResponse>;
     login: (dataUser: AuthLogin) => Promise<AxiosResponse>;
     logout: () => Promise<AxiosResponse>;
     delete: (userId: string) => Promise<AxiosResponse>;
@@ -31,7 +30,7 @@ export type FuntionActionsApi = {
     getUserForToken: () => Promise<AxiosResponse>;
   };
   sellers: {
-    register: (dataSeller: AuthSeller) => Promise<AxiosResponse>;
+    register: (dataSeller: PartialAuthSeller) => Promise<AxiosResponse>;
     login: (dataSeller: AuthLogin) => Promise<AxiosResponse>;
     logout: () => Promise<AxiosResponse>;
     delete: (sellerId: string) => Promise<AxiosResponse>;
@@ -85,4 +84,4 @@ export type FuntionActionsApi = {
   };
 };
 
-
+ 

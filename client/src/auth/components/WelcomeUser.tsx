@@ -1,4 +1,4 @@
-import useInfoUser from '../../hooks/useInfoUser.ts';
+import {useInfoUser, useInfoSeller} from '../../hooks/useInfoUser.ts';
 import { Link } from 'react-router-dom';
 import { FaBagShopping } from 'react-icons/fa6';
 import { FaUserCog } from 'react-icons/fa';
@@ -7,6 +7,8 @@ import { HiMiniClipboardDocumentList } from 'react-icons/hi2';
 
 const WelcomeUser = () => {
   const { infoUser } = useInfoUser();
+  const { infoSeller } = useInfoSeller();
+  
 
  
 
@@ -15,7 +17,7 @@ const WelcomeUser = () => {
       <h1 className="font-medium tracking-widest text-4xl text-gray-800">
         Bienvenido{' '}
         <span className="text-cyan-500 font-semibold">
-          {infoUser?.user?.name}
+          {infoUser?.user?.name || infoSeller?.seller?.name}
         </span>
       </h1>
       <p className="text-gray-700 mt-1.5 text-xs">

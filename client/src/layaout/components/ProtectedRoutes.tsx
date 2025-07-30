@@ -1,16 +1,19 @@
 import { Navigate, Outlet } from "react-router-dom"
-import useInfoUser from "../../hooks/useInfoUser"
+import {useInfoUser, useInfoSeller} from "../../hooks/useInfoUser"
 import {PropagateLoader} from "react-spinners"
 
 const ProtectedRoutes = () => {
-  const { infoUser, isLoading } = useInfoUser()
+  const { infoUser, status } = useInfoUser()
+  const { infoSeller, status: statusSeller } = useInfoSeller()
 
   console.log(infoUser);
-  return isLoading ? (
+  return status === "pending" || statusSeller === "pending" ? (
     <div>
       <PropagateLoader />
     </div>
   ) : infoUser ? (
+    <Outlet />
+  ) : infoSeller ? (
     <Outlet />
   ) : (
     <Navigate to="/" />

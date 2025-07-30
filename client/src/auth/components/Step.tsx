@@ -5,7 +5,7 @@ import {
 } from '../../store/StepStates';
 import { LuCheck } from 'react-icons/lu';
 import React, { useState, useEffect } from 'react';
-import useInfoUser from '../../hooks/useInfoUser';
+import {useInfoUser, useInfoSeller} from '../../hooks/useInfoUser';
 
 type Props = {
   text: string;
@@ -28,6 +28,7 @@ const Step = ({ text, index, children }: Props) => {
   });
 
   const { infoUser } = useInfoUser();
+  const { infoSeller } = useInfoSeller();
   useEffect(() => {
     if (index === 1 && typeUserStore !== '' && !userExistStore) {
       setstate({
@@ -43,14 +44,14 @@ const Step = ({ text, index, children }: Props) => {
         icon: <LuCheck />,
       });
     }
-    if (index === 3 && typeUserStore !== '' && infoUser && userExistStore) {
+    if (index === 3 && typeUserStore !== '' && (infoUser || infoSeller) && userExistStore) {
       setstate({
         style:
           ' bg-linear-to-r from-cyan-400 to-cyan-700 text-white/90  border-none animate-bounce',
         icon: <LuCheck />,
       });
     }
-  }, [stepCount, typeUserStore, index, userExistStore, infoUser]);
+  }, [stepCount, typeUserStore, index, userExistStore, infoUser, infoSeller]);
 
   return (
     <>

@@ -16,8 +16,7 @@ import {
 import { FaCocktail, FaHome, FaMedkit } from 'react-icons/fa';
 import { GiGardeningShears, GiLipstick } from 'react-icons/gi';
 import { IoGameController } from 'react-icons/io5';
-import { IoMdShirt } from "react-icons/io";
-
+import { IoMdShirt } from 'react-icons/io';
 
 interface Node {
   id: string;
@@ -42,8 +41,7 @@ const TreeNode = (props: TreeView.NodeProviderProps<Node>) => {
     if (node.id === '/category/entretenimiento') return <FaGamepad size={18} />;
     if (node.id === '/category/alimentos') return <FaPizzaSlice size={18} />;
     if (node.id === '/category/bebidas') return <FaCocktail size={18} />;
-    if (node.id === '/category/juguetes')
-      return <IoGameController size={18} />;
+    if (node.id === '/category/juguetes') return <IoGameController size={18} />;
     if (node.id === '/category/niños') return <FaBaby size={18} />;
     if (node.id === '/category/mascotas') return <FaPaw size={18} />;
     if (node.id === 'categorias') return <HiOutlineShoppingBag size={18} />;
@@ -57,7 +55,7 @@ const TreeNode = (props: TreeView.NodeProviderProps<Node>) => {
               {getIcons()}
               {node.name}
             </TreeView.BranchText>
-            <TreeView.BranchIndicator>
+            <TreeView.BranchIndicator className="transition-transform duration-300 data-[state=open]:rotate-180">
               <IoIosArrowDown />
             </TreeView.BranchIndicator>
           </TreeView.BranchControl>
@@ -70,7 +68,9 @@ const TreeNode = (props: TreeView.NodeProviderProps<Node>) => {
                 : node.id === 'descuentos'
                 ? 'after:h-[93.3%]'
                 : 'after:h-[96.4%]'
-            } relative  after:w-[3.5px] after:-top-2 after:rounded-full after:bg-gray-200/90  after:absolute after:-left-0.5  ml-4 pl-5`}
+            } relative  after:w-[3.5px] after:-top-2 after:rounded-full after:bg-gray-200/90  after:absolute after:-left-0.5  ml-4 pl-5     
+            data-[state=open]:animate-in data-[state=open]:slide-in-from-top-1 data-[state=open]:fade-in-0 data-[state=open]:zoom-in-95 data-[state=open]:duration-300
+        data-[state=closed]:animate-out data-[state=closed]:slide-out-to-top-1 data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[state=closed]:duration-200`}
           >
             <TreeView.BranchIndentGuide />
             {node.children.map((child, index) => (

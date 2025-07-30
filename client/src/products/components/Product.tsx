@@ -9,7 +9,6 @@ type PropsProduct = {
 };
 
 function Product({ infoProduct, reviews }: PropsProduct) {
-  console.log(infoProduct?.image_url);
   
   return (
     <article className=" w-full mx-auto  shadow-sm shadow-black/50  rounded-lg px-4 py-5 transition-transform duration-300 cursor-pointer  flex flex-col ">

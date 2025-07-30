@@ -175,10 +175,10 @@ export const deleteSeller = async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({
-        error: {
-          message: 'Error deleting seller',
-          typeError: 'DATE_NOT_FOUND',
-        },
+      error: {
+        message: 'Error deleting seller',
+        typeError: 'DATE_NOT_FOUND',
+      },
     });
     console.log(err);
   }
@@ -233,18 +233,18 @@ export const updatedSeller = async (req, res) => {
     ]);
 
     res.status(200).json({
-        message: 'Usuario actualizado correctamente',
-        body: {
-          user: {
-            name: rows[0].name,
-            email: rows[0].email,
-            phone: rows[0].phone,
-            store_name: rows[0].store_name,
-            avatar: rows[0].avatar,
-            city: rows[0].city,
-          },
-          products: rows[0].products,
+      message: 'Usuario actualizado correctamente',
+      body: {
+        user: {
+          name: rows[0].name,
+          email: rows[0].email,
+          phone: rows[0].phone,
+          store_name: rows[0].store_name,
+          avatar: rows[0].avatar,
+          city: rows[0].city,
         },
+        products: rows[0].products,
+      },
     });
   } catch (err) {
     res.status(500).json({
@@ -258,9 +258,13 @@ export const updatedSeller = async (req, res) => {
 };
 
 export const validateInfoTokenSeller = async (req, res) => {
-  const { id } = req.userSeller;
-
   try {
+    const { id } = req.userSeller;
+    if (!id) {
+      return res.status(404).json({
+        message: 'Token not found',
+      });
+    }
     const { rows: seller } = await pool.query(
       'SELECT * FROM sellers WHERE id = $1',
       [id]
@@ -278,18 +282,18 @@ export const validateInfoTokenSeller = async (req, res) => {
     const productsCreate = await searchInfoProducts(seller[0].id);
 
     res.status(200).json({
-        message: 'Usuario encontrado',
-        body: {
-          user: {
-            name: seller[0].name,
-            email: seller[0].email,
-            phone: seller[0].phone,
-            store_name: seller[0].store_name,
-            avatar: seller[0].avatar,
-            city: seller[0].city,
-          },
-          products: productsCreate,
+      message: 'Usuario encontrado',
+      body: {
+        user: {
+          name: seller[0].name,
+          email: seller[0].email,
+          phone: seller[0].phone,
+          store_name: seller[0].store_name,
+          avatar: seller[0].avatar,
+          city: seller[0].city,
         },
+        products: productsCreate,
+      },
     });
   } catch (err) {
     res.status(500).json({
@@ -298,6 +302,5 @@ export const validateInfoTokenSeller = async (req, res) => {
         typeError: 'DATE_NOT_FOUND',
       },
     });
-    console.log(err);
   }
 };

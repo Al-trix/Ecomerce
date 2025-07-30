@@ -1,16 +1,22 @@
 import Link from './Link.tsx';
-import { IoCartOutline } from 'react-icons/io5';
+import { IoCartOutline, IoPersonOutline  } from 'react-icons/io5';
 import { useLocation } from 'react-router';
 import { Avatar } from '@ark-ui/react/avatar';
-import { FiSettings } from "react-icons/fi";
+import { MdOutlineFactCheck } from 'react-icons/md';
+import { GiShoppingCart } from 'react-icons/gi';
+import { MdOutlineSubdirectoryArrowRight } from 'react-icons/md';
+
+
+
 
 import { Menu } from '@ark-ui/react/menu';
 
-import useInfoUser from '../../hooks/useInfoUser.ts';
+import {useInfoUser, useInfoSeller} from '../../hooks/useInfoUser.ts';
 import '../../styles/style.css';
 
 const Header = () => {
   const { infoUser } = useInfoUser();
+  const { infoSeller } = useInfoSeller();
   const { pathname } = useLocation();
   return (
     <>
@@ -30,7 +36,7 @@ const Header = () => {
             </li>
           </div>
           <div className="flex gap-3  items-center justify-end">
-            {infoUser ? (
+            {infoUser || infoSeller ? (
               <>
                 <li>
                   <Link to="/cart" content="Carrito">
@@ -42,31 +48,63 @@ const Header = () => {
                     <Menu.Trigger className="w-7 cursor-pointer h-7 ml-2  outline-none shadow-sm shadow-black  p-px rounded-full hover:shadow-black/70  transition-shadow duration-200 active:scale-95">
                       <Avatar.Root>
                         <Avatar.Fallback className="text-gray-600 text-xs flex justify-center items-center w-full h-full">
-                          {infoUser?.user?.name?.slice(0, 2).toUpperCase()}
+                          {infoUser?.user?.name?.slice(0, 2).toUpperCase() || infoSeller?.seller?.name?.slice(0, 2).toUpperCase()}
                         </Avatar.Fallback>
                         <Avatar.Image
                           className="object-cover rounded-full"
-                          src="https://.pravatar.cc/300"
+                          src={infoUser?.user?.avatar || ''}
                           alt="avatar"
                         />
                       </Avatar.Root>
                     </Menu.Trigger>
 
                     <Menu.Positioner>
-                      <Menu.Content className="bg-white/70 backdrop-blur-lg outline-none shadow-lg  rounded-sm animate-in zoom-in-50 duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-50 text-sm shadow-lg shadow-black/30">
+                      <Menu.Content className="bg-white/80 backdrop-blur-4xl outline-none shadow-lg  rounded-lg  animate-in zoom-in-50 duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-50 text-sm shadow-black/30">
                         <Menu.Item
                           value="options"
-                          className=" pointer-events-none border-b-[1px] border-gray-300 px-4 py-2 fñ"
+                          className=" pointer-events-none border-b-[1px] border-gray-400 px-4 py-2"
                         >
-                          <FiSettings />
-
-                          Opciones
+                          Mis opciones
                         </Menu.Item>
                         <Menu.Item
                           value="options"
-                          className=" rounded cursor-pointer  transition-transform duration-200 ease-in hover:translate-x-1 transform px-4 py-2"
+                          className=" rounded cursor-pointer  transition-transform duration-200 ease-in hover:translate-x-1 transform px-4 py-2 flex items-center gap-1"
                         >
-                          Opciones
+                          <MdOutlineFactCheck
+                            size={17}
+                            className="font-extralight"
+                          />
+                          Ordenes
+                        </Menu.Item>
+                        <Menu.Item
+                          value="carrito"
+                          className=" rounded cursor-pointer  transition-transform duration-200 ease-in hover:translate-x-1 transform px-4 py-2 flex items-center gap-1"
+                        >
+                          <GiShoppingCart
+                            size={17}
+                            className="font-extralight"
+                          />
+                          Carrito
+                        </Menu.Item>
+                        <Menu.Item
+                          value="options"
+                          className=" rounded cursor-pointer  transition-transform duration-200 ease-in hover:translate-x-1 transform px-4 py-2 flex items-center gap-1"
+                        >
+                          <IoPersonOutline
+                            size={17}
+                            className="font-extralight"
+                          />
+                          Perfil
+                        </Menu.Item>
+                        <Menu.Item
+                          value="options"
+                          className="cursor-pointer bg-linear-to-l from-red-300 to-red-400 hover:from-red-400 hover:to-red-300 transition-all duration-200 px-4 py-2 flex items-center gap-1"
+                        >
+                          <MdOutlineSubdirectoryArrowRight
+                            size={17}
+                            className="font-extralight"
+                          />
+                          Cerrar sesión
                         </Menu.Item>
                       </Menu.Content>
                     </Menu.Positioner>

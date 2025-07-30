@@ -4,8 +4,9 @@ import { enums } from '../../types/constantes.ts';
 
 export const getProducts: FuntionActionsApi['products']['getProducts'] = (
   limit = 10,
-  page
-) => axios.get(`${enums.ROUTES_PRODUCTS.PRODUCTS}?limit=${limit}&page=${page}`);
+  page,
+  category
+) => axios.get(`${enums.ROUTES_PRODUCTS.PRODUCTS}?limit=${limit}&page=${page}&`);
 
 export const getProduct: FuntionActionsApi['products']['getProduct'] = (
   productId

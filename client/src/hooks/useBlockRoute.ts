@@ -11,7 +11,6 @@ export const useBlockAuthRoutes = () => {
   useEffect(() => {
     const isOutsideAuth = !location.pathname.startsWith('/auth');
 
-    console.log(isOutsideAuth && userExists);
     
     if (userExists && isOutsideAuth) {
       blockAuthRoutes();
